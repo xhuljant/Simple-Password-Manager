@@ -4,50 +4,90 @@ package com.example.pm.Model;
 import java.io.Serializable;
 
 /**
- * Subclass of Account, meant to hold Login Accounts with a accountName, userName, password, and notes.
+ * Subclass of Account, meant to hold Login Accounts with a accountName, username, password, and notes.
  * Notes can be left blank empty, notes are not considered when objects are compared to one another
  * Implements comparable and serializable to compare objects adn serialize so they can be written to file
  */
 public class LoginAccount extends Account implements Comparable<Account>, Serializable {
     private static final long serialVersionUID = 1L;
-    private String userName;
+    private String username;
     private String password;
     private String notes;
 
-    /**
-     * Constructor to be used when user enters a accountname but wants to set username, password, and notes later
-     * @param accountName and int 0 sent to superclass
-     */
-    public LoginAccount(String accountName) {
-        super(accountName,0);
+    private LoginAccount(Builder builder) {
+        super(builder.accountName, 0);
+        this.username = builder.username;
+        this.password = builder.password;
+        this.notes = builder.notes;
     }
 
-    public LoginAccount(String accountName,String userName, String password, String notes){
-        super(accountName,0);
-        this.userName=userName;
-        this.password=password;
-        this.notes=notes;
+    public static class Builder {
+        private final String accountName;
+        private String username = "";
+        private String password = "";
+        private String notes = "";
+
+        public Builder(String accountName) {
+            this.accountName = accountName;
+        }
+
+        public Builder username(String username) {
+            this.username = username;
+            return this;
+        }
+
+        public Builder password(String password) {
+            this.password = password;
+            return this;
+        }
+
+        public Builder notes(String notes) {
+            this.notes = notes;
+            return this;
+        }
+
+        public LoginAccount build() {
+            return new LoginAccount(this);
+        }
     }
 
-    public String getUserName(){return this.userName;}
-    public String getNotes() {return this.notes;}
-    public String getPassword(){return this.password;}
+    public String getUsername(){
+        if(this.username!=null)
+            return this.username;
+        else
+            return "";
+    }
+
+    public String getNotes() {
+        if(this.notes!=null)
+            return this.notes;
+        else
+            return "";
+    }
+
+    public String getPassword(){
+        if(this.password!=null)
+            return this.password;
+        else
+            return "";
+    }
+
     @Override
     public String getAccountName() {return super.getAccountName();}
+
     @Override
     public int getAccountType() {return super.getAccountType();}
 
     @Override
     public void setAccountName(String accountName) {super.setAccountName(accountName);}
     public void setPassword(String password) {this.password = password;}
-    public void setUserName(String userName) {this.userName = userName;}
+    public void setUsername(String username) {this.username = username;}
     public void setNotes(String notes) {this.notes = notes;}
-
 
     @Override
     public String toString() {
         return getAccountName()+"\n"+
-                getUserName()+"\n"+
+                getUsername()+"\n"+
                 getPassword()+"\n"+
                 getNotes()+"\n";
     }
@@ -69,11 +109,14 @@ public class LoginAccount extends Account implements Comparable<Account>, Serial
         if(this.getAccountName().compareToIgnoreCase(otherLoginAccount.getAccountName())!=0)
             return this.getAccountName().compareToIgnoreCase(otherLoginAccount.getAccountName());
 
-        if(this.getUserName().compareToIgnoreCase(otherLoginAccount.getUserName())!=0)
-            return this.getUserName().compareToIgnoreCase(otherLoginAccount.getUserName());
+        if(this.getUsername().compareToIgnoreCase(otherLoginAccount.getUsername())!=0)
+            return this.getUsername().compareToIgnoreCase(otherLoginAccount.getUsername());
 
         if(this.getPassword().compareTo(otherLoginAccount.getPassword())!=0)
             return this.getPassword().compareTo(otherLoginAccount.getPassword());
+
+        if(this.getNotes().compareTo(otherLoginAccount.getNotes())!=0)
+            return this.getNotes().compareTo(otherLoginAccount.getNotes());
 
         return 0;
     }

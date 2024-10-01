@@ -71,21 +71,21 @@
                 </VBox>
             </children>
         </AnchorPane>
-        <AnchorPane fx:id="cardAccountPane" layoutX="13.0" layoutY="43.0" prefHeight="281.0" prefWidth="321.0" visible="false">
+        <AnchorPane fx:id="cardAccountPane" layoutX="13.0" layoutY="43.0" prefHeight="281.0" prefWidth="321.0">
             <children>
                 <Text fx:id="cardNameTextArea" layoutY="20.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Card Name" />
-                <TextField fx:id="cardNameTextField" layoutY="30.0" prefHeight="26.0" prefWidth="204.0" />
+                <TextField fx:id="cardNameTextField" layoutY="30.0" prefHeight="26.0" prefWidth="321.0" />
                 <Text fx:id="cardNumberTextArea" layoutY="80.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Card Number" />
-                <TextField fx:id="cardNumberTextField" layoutY="90.0" prefHeight="26.0" prefWidth="204.0" />
+                <TextField fx:id="cardNumberTextField" layoutY="90.0" prefHeight="26.0" prefWidth="321.0" />
                 <Text fx:id="secCodeText" layoutY="140.0" strokeType="OUTSIDE" strokeWidth="0.0" text="CVV" />
                 <TextField fx:id="secCodeTextField" layoutY="150.0" prefHeight="26.0" prefWidth="75.0" />
                 <Text fx:id="expDateText" layoutX="129.0" layoutY="140.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Exp Date" />
                 <TextField fx:id="expDateTextField" layoutX="129.0" layoutY="150.0" prefHeight="26.0" prefWidth="75.0" />
                 <Text fx:id="cardHolderNameText" layoutY="201.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Card Holder Name" />
-                <TextField fx:id="cardHolderNameTextField" layoutY="211.0" prefHeight="26.0" prefWidth="204.0" />
+                <TextField fx:id="cardHolderNameTextField" layoutY="211.0" prefHeight="26.0" prefWidth="321.0" />
             </children>
         </AnchorPane>
-        <AnchorPane fx:id="noteAccountPane" layoutX="15.0" layoutY="53.0" prefHeight="281.0" prefWidth="328.0">
+        <AnchorPane fx:id="noteAccountPane" layoutX="15.0" layoutY="53.0" prefHeight="281.0" prefWidth="328.0" visible="false">
             <children>
                 <Text fx:id="noteNameText" layoutY="10.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name" />
                 <TextArea fx:id="noteTextArea" layoutX="-1.0" layoutY="84.0" prefHeight="188.0" prefWidth="322.0" />
@@ -95,6 +95,6 @@
         </AnchorPane>
         <Button fx:id="generatorButton" layoutX="14.0" layoutY="342.0" mnemonicParsing="false" onAction="#handleGeneratorButton" prefHeight="39.0" prefWidth="81.0" text="Generator" />
         <Button fx:id="saveButton" layoutX="135.0" layoutY="342.0" mnemonicParsing="false" onAction="#handleSaveButton" prefHeight="39.0" prefWidth="81.0" text="Save" />
-        <Button fx:id="cancelButton" layoutX="255.0" layoutY="342.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="81.0" text="Cancel" />
+        <Button fx:id="cancelButton" onAction="#handleCancelButton" layoutX="255.0" layoutY="342.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="81.0" text="Cancel" />
     </children>
 </AnchorPane>

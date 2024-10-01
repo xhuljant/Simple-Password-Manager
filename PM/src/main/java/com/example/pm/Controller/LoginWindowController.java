@@ -21,20 +21,11 @@ import java.nio.file.Paths;
 import java.util.Locale;
 
 public class LoginWindowController {
-    @FXML
-    private TextField userNameField;
-
-    @FXML
-    private TextField passwordField;
-
-    @FXML
-    private TextField retypePasswordField;
-
-    @FXML
-    private Button loginButton;
-
-    @FXML
-    private Button createAccountButton;
+    @FXML private TextField userNameField;
+    @FXML private TextField passwordField;
+    @FXML private TextField retypePasswordField;
+    @FXML private Button loginButton;
+    @FXML private Button createAccountButton;
 
     @FXML
     private void initialize() {
@@ -43,8 +34,14 @@ public class LoginWindowController {
     }
     @FXML
     private void handleLoginButton(ActionEvent event) throws Exception {
+
+        String username = "xhuljan";
+        String password = "qwertyui1!";
+
+        /* uncomment once testing is done, remove above code
         String username = userNameField.getText();
         String password = passwordField.getText();
+         */
 
         if(AccountManager.fileExistsForUsername(username.toLowerCase(Locale.ROOT))){
             if(AccountManager.verifyAccess(username,password))
@@ -75,6 +72,7 @@ public class LoginWindowController {
             Stage mainStage=new Stage();
             mainStage.setTitle("Passoword Manager");
             mainStage.setScene(new Scene(root));
+            mainStage.setResizable(false);
             mainStage.show();
 
             //close previous window

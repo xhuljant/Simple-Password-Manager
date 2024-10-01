@@ -47,7 +47,6 @@ public class AddAccountController {
     @FXML private Button generatorButton;
     @FXML private Button saveButton;
 
-
     @FXML private AnchorPane cardAccountPane;
     @FXML private Text cardHolderNameText;
     @FXML private TextField cardHolderNameTextField;
@@ -73,7 +72,6 @@ public class AddAccountController {
         accountTypeChoiceBox.setValue("Login");
     }
 
-    @FXML
     public void setAccountManager(AccountManager accountManager,String masterUsername,String masterPassword){
         this.accountManager=accountManager;
         this.masterPassword=masterPassword;
@@ -105,10 +103,18 @@ public class AddAccountController {
 
         if(choice.equalsIgnoreCase("card")){
             if(!cardNameTextField.getText().isEmpty()){
-                CardAccount newAccount = new CardAccount(cardNameTextField.getText(), cardNumberTextField.getText(), expDateText.getText(), secCodeText.getText(), cardHolderNameTextField.getText());
+                CardAccount newAccount=new CardAccount.Builder(cardNameTextField.getText())
+                        .cardNumber(cardNumberTextField.getText())
+                        .cardExpDate(expDateTextField.getText())
+                        .cardSecCode(secCodeTextField.getText())
+                        .cardHolderName(cardHolderNameTextField.getText())
+                        .build();
+
                 boolean accountAdded = accountManager.addAccount(newAccount);
-                if (accountAdded)
+                if (accountAdded) {
                     accountManager.saveToFile(masterUsername, masterPassword);
+                    System.out.println("Card Account Added");
+                }
                 generatorButton.getScene().getWindow().hide();
             }else{
                 showAlert(Alert.AlertType.WARNING,"Error","Please enter card name before saving.");
@@ -117,10 +123,16 @@ public class AddAccountController {
 
         if(choice.equalsIgnoreCase("login")){
             if(!accountNameTextField.getText().isEmpty()){
-                LoginAccount newAccount = new LoginAccount(accountNameTextField.getText(), usernameTextField.getText(), passwordTextField.getText(), loginNoteArea.getText());
+                LoginAccount newAccount=new LoginAccount.Builder(accountNameTextField.getText())
+                        .username(usernameTextField.getText())
+                        .password(passwordTextField.getText())
+                        .notes(loginNoteArea.getText())
+                        .build();
                 boolean accountAdded = accountManager.addAccount(newAccount);
-                if (accountAdded)
+                if (accountAdded) {
                     accountManager.saveToFile(masterUsername, masterPassword);
+                    System.out.println("Login Account Added");
+                }
                 generatorButton.getScene().getWindow().hide();
             }else {
                 showAlert(Alert.AlertType.WARNING, "Error", "Please enter account name before saving.");
@@ -129,21 +141,24 @@ public class AddAccountController {
 
         if(choice.equalsIgnoreCase("note")) {
             if (!noteNameTextField.getText().isEmpty()) {
-                NoteAccount newAccount = new NoteAccount(noteNameTextField.getText(), noteTextArea.getText());
+                NoteAccount newAccount=new NoteAccount.Builder(noteNameTextField.getText())
+                        .noteContent(noteTextArea.getText())
+                        .build();
                 boolean accountAdded = accountManager.addAccount(newAccount);
-                if (accountAdded)
+                if (accountAdded) {
                     accountManager.saveToFile(masterUsername, masterPassword);
+                    System.out.println("Note Account Added");
+                }
                 generatorButton.getScene().getWindow().hide();
             } else {
                 showAlert(Alert.AlertType.WARNING, "Error", "Please enter note name before saving.");
             }
         }
-
     }
 
     @FXML
     public void handleCancelButton(ActionEvent event){
-
+        generatorButton.getScene().getWindow().hide();
     }
 
     @FXML

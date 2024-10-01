@@ -15,24 +15,80 @@ public class CardAccount extends Account implements Comparable<Account>, Seriali
     private String cardSecCode;
     private String cardHolderName;
 
-    public CardAccount(String accountName){
-        super(accountName,1);
+    private CardAccount(Builder builder){
+        super(builder.accountName,1);
+        this.cardNumber=builder.cardNumber;
+        this.cardSecCode=builder.cardSecCode;
+        this.cardExpDate=builder.cardExpDate;
+        this.cardHolderName=builder.cardHolderName;
     }
 
-    public CardAccount(String accountName, String cardNumber, String cardExpDate, String cardSecCode, String cardHolderName){
-        super(accountName,1);
-        this.cardNumber=cardNumber;
-        this.cardExpDate=cardExpDate;
-        this.cardSecCode=cardSecCode;
-        this.cardHolderName=cardHolderName;
+    public static class Builder{
+        private final String accountName;
+        private String cardNumber="";
+        private String cardExpDate="";
+        private String cardSecCode="";
+        private String cardHolderName="";
+
+        public Builder(String accountName) {
+            this.accountName = accountName;
+        }
+
+        public Builder cardNumber(String cardNumber){
+            this.cardNumber=cardNumber;
+            return this;
+        }
+
+        public Builder cardExpDate(String cardExpDate){
+            this.cardExpDate=cardExpDate;
+            return this;
+        }
+
+        public Builder cardSecCode(String cardSecCode){
+            this.cardSecCode=cardSecCode;
+            return this;
+        }
+
+        public Builder cardHolderName(String cardHolderName){
+            this.cardHolderName=cardHolderName;
+            return this;
+        }
+
+        public CardAccount build(){
+            return new CardAccount(this);
+        }
     }
 
     @Override
     public String getAccountName() {return super.getAccountName();}
-    public String getCardExpDate() {return cardExpDate;}
-    public String getCardHolderName() {return cardHolderName;}
-    public String getCardNumber() {return cardNumber;}
-    public String getCardSecCode() {return cardSecCode;}
+
+    public String getCardExpDate() {
+        if(this.cardExpDate!=null)
+            return cardExpDate;
+        else
+            return "";
+    }
+
+    public String getCardHolderName() {
+        if(this.cardHolderName!=null)
+            return cardHolderName;
+        else
+            return "";
+    }
+
+    public String getCardNumber() {
+        if(this.cardNumber!=null)
+            return cardNumber;
+        else
+            return "";
+    }
+    public String getCardSecCode() {
+        if(this.cardSecCode!=null)
+            return cardSecCode;
+        else
+            return "";
+    }
+
     @Override
     public int getAccountType() {return super.getAccountType();}
 

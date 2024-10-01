@@ -9,47 +9,33 @@ import javafx.scene.input.ClipboardContent;
 import javafx.stage.Stage;
 
 public class GeneratePasswordController {
-    @FXML
-    private TextField passwordField;
-    @FXML
-    private CheckBox upperCaseLetters;
-    @FXML
-    private CheckBox numberCharacters;
-    @FXML
-    private CheckBox specialCharacters;
-    @FXML
-    private CheckBox lowerCaseLetters;
-    @FXML
-    private Button copyButton;
-    @FXML
-    private Button generateButton;
-    @FXML
-    private Slider passwordSizeSlider;
-    @FXML
-    private Button closeButton;
+    @FXML private TextField passwordField;
+    @FXML private CheckBox upperCaseLetters;
+    @FXML private CheckBox numberCharacters;
+    @FXML private CheckBox specialCharacters;
+    @FXML private CheckBox lowerCaseLetters;
+    @FXML private Button copyButton;
+    @FXML private Button generateButton;
+    @FXML private Slider passwordSizeSlider;
+    @FXML private Button closeButton;
 
     @FXML
     public void initialize(){
-
         String password= PasswordGenerator.generatePassword(lowerCaseLetters.isSelected(),upperCaseLetters.isSelected(),specialCharacters.isSelected(),numberCharacters.isSelected(),(int)passwordSizeSlider.getValue());
-
         passwordField.setText(password);
     }
 
     @FXML
     public void handleGenerateButton(ActionEvent e){
-
         int passwordLength=(int)passwordSizeSlider.getValue();
-
         if(!lowerCaseLetters.isSelected()&!upperCaseLetters.isSelected()&!specialCharacters.isSelected()&!numberCharacters.isSelected()){
             showAlert(Alert.AlertType.WARNING,"Error","At least one character type is needed. Please select one and try again.");
         }
-
         String password= PasswordGenerator.generatePassword(lowerCaseLetters.isSelected(),upperCaseLetters.isSelected(),specialCharacters.isSelected(),numberCharacters.isSelected(),(int)passwordSizeSlider.getValue());
-
         passwordField.setText(password);
     }
 
+    @FXML
     public void handleCopyButton(){
         final Clipboard clipboard=Clipboard.getSystemClipboard();
         final ClipboardContent text=new ClipboardContent();
@@ -57,9 +43,9 @@ public class GeneratePasswordController {
         clipboard.setContent(text);
     }
 
+    @FXML
     public void handleCloseButton(){
-        Stage generatePasswordStage=(Stage)passwordField.getScene().getWindow();
-        generatePasswordStage.close();
+        passwordField.getScene().getWindow().hide();
     }
 
     private void showAlert(Alert.AlertType alertType, String title, String content) {

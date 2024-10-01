@@ -7,18 +7,36 @@ public class NoteAccount extends Account implements Serializable {
     private static final long serialVersionUID = 1L;
     private String note;
 
-    public NoteAccount(String accountName){
-        super(accountName,2);
+    private NoteAccount(Builder builder){
+        super(builder.noteName,2);
+        this.note=builder.noteContent;
     }
 
-    public NoteAccount(String accountName,String note){
-        super(accountName,2);
-        this.note=note;
+    public static class Builder{
+        private final String noteName;
+        private String noteContent="";
+
+        public Builder(String noteName){
+            this.noteName=noteName;
+        }
+
+        public Builder noteContent(String noteContent){
+            this.noteContent=noteContent;
+            return this;
+        }
+
+        public NoteAccount build(){
+            return new NoteAccount(this);
+        }
     }
 
     public String getNote() {
-        return note;
+        if(this.note!=null)
+            return note;
+        else
+            return "";
     }
+
     public void addToNote(String note){
         this.note=note+"\n"+note;
     }

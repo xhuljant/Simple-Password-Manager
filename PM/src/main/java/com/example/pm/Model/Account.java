@@ -27,7 +27,12 @@ public class Account implements Comparable<Account>, Serializable{
     }
 
     public int getAccountType() {return accountType;}
-    public String getAccountName() {return accountName;}
+    public String getAccountName() {
+        if(this.accountName!=null)
+            return accountName;
+        else
+            return "";
+    }
     public void setAccountName(String accountName) {this.accountName = accountName;}
     @Override
     public String toString() {return this.accountName;}
