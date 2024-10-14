@@ -43,7 +43,7 @@
                         <Insets bottom="10.0" />
                      </VBox.margin>
                   </Button>
-                  <Button fx:id="exportButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="90.0" text="Export">
+                  <Button fx:id="exportButton" onAction="#handleExportButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="90.0" text="Export">
                      <VBox.margin>
                         <Insets bottom="10.0" />
                      </VBox.margin>
@@ -56,19 +56,11 @@
           </AnchorPane>
           <AnchorPane fx:id="accountsListPane" layoutX="120.0" layoutY="-2.0" minHeight="0.0" minWidth="0.0" prefHeight="605.0" prefWidth="198.0">
               <children>
-                  <TextField fx:id="searchTextField" layoutX="-8.0" layoutY="12.0" prefHeight="26.0" prefWidth="165.0" promptText="Search">
+                  <TextField fx:id="searchTextField" layoutX="-8.0" layoutY="12.0" prefHeight="26.0" prefWidth="200.0" promptText="Search">
                       <opaqueInsets>
                           <Insets bottom="10.0" />
                       </opaqueInsets>
                   </TextField>
-                  <Button fx:id="searchButton" layoutX="162.0" layoutY="12.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="30.0">
-               <graphic>
-                  <ImageView fitHeight="13.0" fitWidth="13.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../../Media/search.png" />
-                     </image>
-                  </ImageView>
-               </graphic></Button>
                   <ListView fx:id="allAccountsListView" layoutX="-8.0" layoutY="45.0" prefHeight="513.0" prefWidth="200.0" />
             <ListView fx:id="loginAccountsListView" layoutX="-8.0" layoutY="45.0" prefHeight="513.0" prefWidth="200.0" visible="false" />
             <ListView fx:id="cardAccountsListView" layoutX="-8.0" layoutY="45.0" prefHeight="513.0" prefWidth="200.0" visible="false" />
@@ -136,7 +128,7 @@
                                   </TextArea>
                               </children>
                           </VBox>
-                          <Button fx:id="copyUserNameButton" onAction="#handleCopyUsernameButton" layoutX="247.0" layoutY="76.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="29.0">
+                          <Button fx:id="copyUserNameButton" layoutX="247.0" layoutY="76.0" mnemonicParsing="false" onAction="#handleCopyUsernameButton" prefHeight="26.0" prefWidth="29.0">
                      <graphic>
                         <ImageView fitHeight="14.0" fitWidth="12.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -144,7 +136,7 @@
                            </image>
                         </ImageView>
                      </graphic></Button>
-                          <Button fx:id="copyPasswordButton" onAction="#handleCopyPasswordButton" layoutX="247.0" layoutY="133.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="29.0">
+                          <Button fx:id="copyPasswordButton" layoutX="247.0" layoutY="133.0" mnemonicParsing="false" onAction="#handleCopyPasswordButton" prefHeight="26.0" prefWidth="29.0">
                      <graphic>
                         <ImageView fitHeight="14.0" fitWidth="12.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -210,7 +202,7 @@
                                   </TextField>
                               </children>
                           </VBox>
-                          <Button fx:id="copyCardNumberButton" onAction="#handleCopyCardNumberButton" layoutX="247.0" layoutY="76.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="29.0">
+                          <Button fx:id="copyCardNumberButton" layoutX="247.0" layoutY="76.0" mnemonicParsing="false" onAction="#handleCopyCardNumberButton" prefHeight="26.0" prefWidth="29.0">
                      <graphic>
                         <ImageView fitHeight="14.0" fitWidth="12.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -218,7 +210,7 @@
                            </image>
                         </ImageView>
                      </graphic></Button>
-                          <Button fx:id="copyExpDateButton" onAction="#handleCopyExpDateButton" layoutX="247.0" layoutY="133.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="29.0">
+                          <Button fx:id="copyExpDateButton" layoutX="247.0" layoutY="133.0" mnemonicParsing="false" onAction="#handleCopyExpDateButton" prefHeight="26.0" prefWidth="29.0">
                      <graphic>
                         <ImageView fitHeight="14.0" fitWidth="12.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -226,7 +218,7 @@
                            </image>
                         </ImageView>
                      </graphic></Button>
-                          <Button fx:id="copySecCodeButton" onAction="#handleCopySecCodeButton" layoutX="247.0" layoutY="189.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="29.0">
+                          <Button fx:id="copySecCodeButton" layoutX="247.0" layoutY="189.0" mnemonicParsing="false" onAction="#handleCopySecCodeButton" prefHeight="26.0" prefWidth="29.0">
                      <graphic>
                         <ImageView fitHeight="14.0" fitWidth="12.0" pickOnBounds="true" preserveRatio="true">
                            <image>

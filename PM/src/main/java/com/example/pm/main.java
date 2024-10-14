@@ -13,6 +13,7 @@ import java.io.IOException;
 public class main extends Application {
     @Override
     public void start(Stage stage) throws IOException {
+
         FXMLLoader fxmlLoader = new FXMLLoader(main.class.getResource("/com/example/pm/LoginWindowController.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle("Password Manager");

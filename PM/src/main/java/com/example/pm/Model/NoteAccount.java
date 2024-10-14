@@ -2,6 +2,7 @@ package com.example.pm.Model;
 
 
 import java.io.Serializable;
+import java.util.Comparator;
 
 public class NoteAccount extends Account implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -59,6 +60,19 @@ public class NoteAccount extends Account implements Serializable {
     public String toString() {return getAccountName()+"\n"+ this.note;}
 
     @Override
+    public int compareTo(Account other){
+        if(!(other instanceof Account))
+            return getClass().getName().compareTo(other.getClass().getName());
+
+        NoteAccount otherAccount = (NoteAccount) other;
+
+        return Comparator.comparing(NoteAccount::getAccountType)
+                .thenComparing(NoteAccount::getAccountName,String.CASE_INSENSITIVE_ORDER)
+                .thenComparing(NoteAccount::getNote,String.CASE_INSENSITIVE_ORDER)
+                .compare(this,otherAccount);
+    }
+    /*
+    @Override
     public int compareTo(Account other) {
         NoteAccount otherNoteAccount=(NoteAccount) other;
 
@@ -70,4 +84,6 @@ public class NoteAccount extends Account implements Serializable {
 
         return 0;
     }
+
+     */
 }

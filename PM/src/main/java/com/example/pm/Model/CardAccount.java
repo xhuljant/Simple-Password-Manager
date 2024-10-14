@@ -2,6 +2,7 @@ package com.example.pm.Model;
 
 
 import java.io.Serializable;
+import java.util.Comparator;
 
 /**
  * Subclass of Account
@@ -107,27 +108,19 @@ public class CardAccount extends Account implements Comparable<Account>, Seriali
     }
 
     @Override
-    public int compareTo(Account other) {
-        CardAccount otherCardAccount=(CardAccount)other;
+    public int compareTo(Account other){
+        if(!(other instanceof Account))
+            return getClass().getName().compareTo(other.getClass().getName());
 
-        if(this.getAccountType()!=otherCardAccount.getAccountType())
-            return Integer.compare(this.getAccountType(),otherCardAccount.getAccountType());
+        CardAccount otherCardAccount=(CardAccount) other;
 
-        if(this.getAccountName().compareToIgnoreCase(otherCardAccount.getAccountName())!=0)
-            return this.getAccountName().compareToIgnoreCase(otherCardAccount.getAccountName());
-
-        if(this.getCardHolderName().compareToIgnoreCase(otherCardAccount.cardHolderName)!=0)
-            return this.getCardHolderName().compareToIgnoreCase(otherCardAccount.cardHolderName);
-
-        if(this.getCardNumber().compareToIgnoreCase(otherCardAccount.getCardNumber())!=0)
-            return this.getCardNumber().compareToIgnoreCase(otherCardAccount.getCardNumber());
-
-        if(this.getCardSecCode().compareToIgnoreCase(otherCardAccount.getCardSecCode())!=0)
-            return this.getCardSecCode().compareToIgnoreCase(otherCardAccount.getCardSecCode());
-
-        if(this.getCardExpDate().compareToIgnoreCase(otherCardAccount.cardExpDate)!=0)
-            return this.getCardExpDate().compareToIgnoreCase(otherCardAccount.cardExpDate);
-
-        return 0;
+        return Comparator.comparing(CardAccount::getAccountType)
+                .thenComparing(CardAccount::getCardHolderName,String.CASE_INSENSITIVE_ORDER)
+                .thenComparing(CardAccount::getAccountName,String.CASE_INSENSITIVE_ORDER)
+                .thenComparing(CardAccount::getCardNumber,String.CASE_INSENSITIVE_ORDER)
+                .thenComparing(CardAccount::getCardExpDate,String.CASE_INSENSITIVE_ORDER)
+                .thenComparing(CardAccount::getCardSecCode,String.CASE_INSENSITIVE_ORDER)
+                .compare(this,otherCardAccount);
     }
+
 }

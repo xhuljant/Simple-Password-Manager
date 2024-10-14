@@ -2,6 +2,7 @@ package com.example.pm.Model;
 
 
 import java.io.Serializable;
+import java.util.Comparator;
 
 /**
  * Subclass of Account, meant to hold Login Accounts with a accountName, username, password, and notes.
@@ -99,6 +100,8 @@ public class LoginAccount extends Account implements Comparable<Account>, Serial
      * @param other the object to be compared.
      * @return 0 if equal, other number if not
      */
+
+    /*
     @Override
     public int compareTo(Account other) {
         LoginAccount otherLoginAccount=(LoginAccount)other;
@@ -119,5 +122,21 @@ public class LoginAccount extends Account implements Comparable<Account>, Serial
             return this.getNotes().compareTo(otherLoginAccount.getNotes());
 
         return 0;
+    }
+    */
+
+    @Override
+    public int compareTo(Account other){
+        if(!(other instanceof Account))
+            return getClass().getName().compareTo(other.getClass().getName());
+
+        LoginAccount otherAccount = (LoginAccount) other;
+
+        return Comparator.comparing(LoginAccount::getAccountType)
+                .thenComparing(LoginAccount::getAccountName,String.CASE_INSENSITIVE_ORDER)
+                .thenComparing(LoginAccount::getUsername,String.CASE_INSENSITIVE_ORDER)
+                .thenComparing(LoginAccount::getPassword)
+                .thenComparing(LoginAccount::getNotes,String.CASE_INSENSITIVE_ORDER)
+                .compare(this,otherAccount);
     }
 }

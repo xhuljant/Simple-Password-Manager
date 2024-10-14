@@ -3,6 +3,7 @@ package com.example.pm.Controller;
 import com.example.pm.Model.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,17 +14,22 @@ import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import javax.smartcardio.Card;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.util.List;
 import java.util.Optional;
 
 public class MainWindowController {
 
     private AccountManager accountManager;
-    protected Account currentAccount;
+    private Account currentAccount;
     private String masterUsername;
     private String masterPassword;
     private boolean editSelected;
@@ -33,6 +39,7 @@ public class MainWindowController {
     @FXML private Button copySecCodeButton;
     @FXML private Button copyPasswordButton;
     @FXML private Button copyUserNameButton;
+    @FXML private Button exportButton;
 
     @FXML public Text itemInformationText;
     @FXML private Button allAccountsButton;
@@ -41,7 +48,6 @@ public class MainWindowController {
     @FXML private Button noteAccountsButton;
     @FXML private Button passwordGeneratorButton;
     @FXML private TextField searchTextField;
-    @FXML private Button searchButton;
 
     @FXML private Button saveAccountButton;
     @FXML private Button editAccountButton;
@@ -75,19 +81,16 @@ public class MainWindowController {
     @FXML private TextField noteNameTextField;
     @FXML private TextArea noteContentTextArea;
 
-    /*
-    private ObservableList<Account> allAccounts = FXCollections.observableArrayList();
-    private ObservableList<Account> loginAccounts = FXCollections.observableArrayList();
-    private ObservableList<Account> cardAccounts = FXCollections.observableArrayList();
-    private ObservableList<Account> noteAccounts = FXCollections.observableArrayList();
-     */
-
     @FXML
     private void initialize() {
+
         accountManager = new AccountManager();
+        setupListViews();
+        setupSearchFunctionality();
+    }
+
+    private void setupListViews(){
         allAccountsListView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            itemInformationText.setVisible(true);
-            editAccountButton.setVisible(true);
             if (editSelected) {
                 resetButtonsAndFields();
                 editSelected = false;
@@ -98,8 +101,6 @@ public class MainWindowController {
         });
 
         loginAccountsListView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            itemInformationText.setVisible(true);
-            editAccountButton.setVisible(true);
             if (editSelected) {
                 resetButtonsAndFields();
                 editSelected = false;
@@ -110,8 +111,6 @@ public class MainWindowController {
         });
 
         cardAccountsListView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            itemInformationText.setVisible(true);
-            editAccountButton.setVisible(true);
             if (editSelected) {
                 resetButtonsAndFields();
                 editSelected = false;
@@ -122,8 +121,6 @@ public class MainWindowController {
         });
 
         noteAccountsListView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            itemInformationText.setVisible(true);
-            editAccountButton.setVisible(true);
             if (editSelected) {
                 resetButtonsAndFields();
                 editSelected = false;
@@ -134,6 +131,32 @@ public class MainWindowController {
         });
     }
 
+    private void setupSearchFunctionality() {
+        searchTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            filterAccounts(newValue);
+        });
+    }
+
+    private void filterAccounts(String searchText) {
+        ObservableList<Account> filteredAccounts = FXCollections.observableArrayList();
+        List<Account> allAccounts = accountManager.getAllAccounts();
+
+        if (searchText == null || searchText.isEmpty()) {
+            filteredAccounts.addAll(allAccounts);
+        } else {
+            for (Account account : allAccounts) {
+                if (account.getAccountName().toLowerCase().contains(searchText.toLowerCase())) {
+                    filteredAccounts.add(account);
+                }
+            }
+        }
+        allAccountsListView.setItems(filteredAccounts);
+        loginAccountsListView.setItems(filteredAccounts);
+        cardAccountsListView.setItems(filteredAccounts);
+        noteAccountsListView.setItems(filteredAccounts);
+    }
+
+
     public void setAccountManager(AccountManager accountManager, String masterUsername, String masterPassword) {
         this.masterUsername = masterUsername;
         this.masterPassword = masterPassword;
@@ -143,7 +166,6 @@ public class MainWindowController {
         loadCardAccountsList();
         loadNoteAccountsList();
         showAllAccounts();
-        hideItemInformation();
     }
 
     private void loadAllAccountsList() {
@@ -211,6 +233,7 @@ public class MainWindowController {
     //Functions to only show the list user would like to see
     public void showAllAccounts() {
         clearAllSelections();
+        hideItemInformation();
         allAccountsListView.setVisible(true);
         loginAccountsListView.setVisible(false);
         noteAccountsListView.setVisible(false);
@@ -219,6 +242,7 @@ public class MainWindowController {
 
     public void showLoginAccounts() {
         clearAllSelections();
+        hideItemInformation();
         allAccountsListView.setVisible(false);
         loginAccountsListView.setVisible(true);
         noteAccountsListView.setVisible(false);
@@ -227,6 +251,7 @@ public class MainWindowController {
 
     public void showNoteAccounts() {
         clearAllSelections();
+        hideItemInformation();
         allAccountsListView.setVisible(false);
         loginAccountsListView.setVisible(false);
         noteAccountsListView.setVisible(true);
@@ -235,6 +260,7 @@ public class MainWindowController {
 
     public void showCardAccounts() {
         clearAllSelections();
+        hideItemInformation();
         allAccountsListView.setVisible(false);
         loginAccountsListView.setVisible(false);
         noteAccountsListView.setVisible(false);
@@ -255,8 +281,8 @@ public class MainWindowController {
         loginAccountsListView.getSelectionModel().clearSelection();
         cardAccountsListView.getSelectionModel().clearSelection();
         noteAccountsListView.getSelectionModel().clearSelection();
-        hideItemInformation();
         resetButtonsAndFields();
+        hideItemInformation();
     }
 
     //Functions to show the fields on the right side of listview that match the object type
@@ -270,6 +296,9 @@ public class MainWindowController {
         usernameTextField.setText(account.getUsername());
         passwordTextField.setText(account.getPassword());
         notesTextField.setText(account.getNotes());
+
+        editAccountButton.setVisible(true);
+        itemInformationText.setVisible(true);
     }
 
     public void showCardDetails(CardAccount account) {
@@ -282,6 +311,9 @@ public class MainWindowController {
         cardHolderNameTextField.setText(account.getCardHolderName());
         expDateTextField.setText(account.getCardExpDate());
         secCodeTextField.setText(account.getCardSecCode());
+
+        editAccountButton.setVisible(true);
+        itemInformationText.setVisible(true);
     }
 
     public void showNoteDetails(NoteAccount account) {
@@ -291,6 +323,10 @@ public class MainWindowController {
 
         noteNameTextField.setText(account.getAccountName());
         noteContentTextArea.setText(account.getNote());
+
+        editAccountButton.setVisible(true);
+        itemInformationText.setVisible(true);
+
     }
 
     private void loadAllLists() {
@@ -321,7 +357,7 @@ public class MainWindowController {
         deleteAccountButton.setVisible(false);
 
         saveAccountButton.setVisible(false);
-        editAccountButton.setVisible(true);
+        editAccountButton.setVisible(false);
         cancelEditButton.setVisible(false);
 
         accountNameTextField.setEditable(false);
@@ -341,13 +377,47 @@ public class MainWindowController {
         System.out.println("Reset all buttons and fields.");
     }
 
-    @FXML public void handleAllAccountsButton(ActionEvent e) {showAllAccounts();}
-    @FXML public void handleLoginAccountsButton(ActionEvent e) {showLoginAccounts();}
-    @FXML public void handleCardAccountsButton(ActionEvent e) {showCardAccounts();}
-    @FXML public void handleNoteAccountsButton(ActionEvent e) {showNoteAccounts();}
+    @FXML public void handleAllAccountsButton(ActionEvent event) {showAllAccounts();}
+    @FXML public void handleLoginAccountsButton(ActionEvent event) {showLoginAccounts();}
+    @FXML public void handleCardAccountsButton(ActionEvent event) {showCardAccounts();}
+    @FXML public void handleNoteAccountsButton(ActionEvent event) {showNoteAccounts();}
 
     @FXML
-    public void handleEditAccountButton(ActionEvent e) {
+    public void handleExportButton(){
+        EncryptionService encryptionService=new EncryptionService();
+        File sourceFile= new File("Data/"+encryptionService.generateFileName(masterUsername));
+
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        directoryChooser.setTitle("Select Folder");
+        Stage currentStage = (Stage) exportButton.getScene().getWindow();
+        File selectedDirectory = directoryChooser.showDialog(currentStage);
+
+        if(selectedDirectory!=null){
+
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Confirm Export");
+            alert.setHeaderText("Export File");
+            alert.setContentText("Export file to "+selectedDirectory.getAbsolutePath()+" ?");
+
+            alert.showAndWait().ifPresent(response -> {
+                if(response==ButtonType.OK){
+                    try{
+                        File copiedFile=new File(selectedDirectory,sourceFile.getName());
+                        Files.copy(sourceFile.toPath(),copiedFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                        System.out.println("File Exported Successfully.");
+                    }catch (Exception e){
+                        System.out.println("File Exported Successfully.");
+                        e.printStackTrace();
+                    }
+                }else {
+                    System.out.println("File not exported.");
+                }
+            });
+        }
+    }
+
+    @FXML
+    public void handleEditAccountButton(ActionEvent event) {
         deleteAccountButton.setVisible(true);
         currentAccount = getSelectedAccount();
         editSelected = true;
@@ -377,10 +447,8 @@ public class MainWindowController {
         cancelEditButton.setVisible(true);
     }
 
-    //implement save button and cancel button unhide on succsufl edit account
-    //
     @FXML
-    public void handleSaveButton(ActionEvent e) throws Exception {
+    public void handleSaveButton(ActionEvent event) throws Exception {
 
         if (loginDetailsPane.isVisible()) {
             if (accountNameTextField.getText().isEmpty()) {
@@ -393,18 +461,20 @@ public class MainWindowController {
                         .notes(notesTextField.getText())
                         .build();
 
-                boolean accountAdded = accountManager.addAccount(newAccount);
-                if (!accountManager.accountExists(newAccount)) {
+                if(!accountManager.accountExists(newAccount)){
+                    boolean accountAdded = accountManager.addAccount(newAccount);
+
                     if (accountAdded) {
-                        accountManager.addAccount(newAccount);
                         accountManager.removeAccount(currentAccount);
                         accountManager.saveToFile(masterUsername, masterPassword);
                         accountManager = AccountManager.loadFromFile(masterUsername, masterPassword);
                         loadAllLists();
                         System.out.println("Added updated account, removed old account");
+                    }else {
+                        showAlert(Alert.AlertType.WARNING,"Error","Unable to add account");
                     }
-                } else {
-                    showAlert(Alert.AlertType.WARNING, "Error", "Account not changed due to no edits or similar account exists.");
+                }else {
+                    showAlert(Alert.AlertType.WARNING,"Error","Account already exists.");
                 }
             }
         }
@@ -420,17 +490,20 @@ public class MainWindowController {
                         .cardHolderName(cardHolderNameTextField.getText())
                         .build();
 
-                boolean accountAdded = accountManager.addAccount(newAccount);
-                if (!accountManager.accountExists(newAccount)) {
-                    if (accountAdded) {
+                if(!accountManager.accountExists(newAccount)){
+                    boolean accountAdded = accountManager.addAccount(newAccount);
+
+                    if(accountAdded){
                         accountManager.removeAccount(currentAccount);
                         currentAccount = newAccount;
                         accountManager.saveToFile(masterUsername, masterPassword);
                         accountManager = AccountManager.loadFromFile(masterUsername, masterPassword);
                         loadAllLists();
+                    }else {
+                        showAlert(Alert.AlertType.WARNING,"Error","Unable to add account");
                     }
-                } else {
-                    showAlert(Alert.AlertType.WARNING, "Error", "Account not changed due to no edits or similar account exists.");
+                }else {
+                    showAlert(Alert.AlertType.WARNING,"Error","Account already exists.");
                 }
             }
         }
@@ -443,31 +516,37 @@ public class MainWindowController {
                 NoteAccount newAccount = new NoteAccount.Builder(noteNameTextField.getText())
                         .noteContent(noteContentTextArea.getText())
                         .build();
-                boolean accountAdded = accountManager.addAccount(newAccount);
-                if (accountAdded) {
-                    accountManager.removeAccount(currentAccount);
-                    currentAccount = newAccount;
-                    accountManager.saveToFile(masterUsername, masterPassword);
-                    accountManager = AccountManager.loadFromFile(masterUsername, masterPassword);
-                    loadAllLists();
-                } else {
-                    showAlert(Alert.AlertType.WARNING, "Error", "Account not changed due to no edits or similar account exists.");
+
+                if(!accountManager.accountExists(newAccount)){
+                    boolean accountAdded = accountManager.addAccount(newAccount);
+
+                    if(accountAdded){
+                        accountManager.removeAccount(currentAccount);
+                        currentAccount = newAccount;
+                        accountManager.saveToFile(masterUsername, masterPassword);
+                        accountManager = AccountManager.loadFromFile(masterUsername, masterPassword);
+                        loadAllLists();
+                    }else{
+                        showAlert(Alert.AlertType.WARNING,"Error","Unable to add account");
+                    }
+                }else {
+                    showAlert(Alert.AlertType.WARNING,"Error","Account already exists.");
                 }
             }
         }
-
         resetButtonsAndFields();
     }
 
     @FXML
-    public void handleCancelButton(ActionEvent e) {
+    public void handleCancelButton(ActionEvent event) {
         showAccountDetails(currentAccount);
         resetButtonsAndFields();
+        editAccountButton.setVisible(true);
         System.out.println("Cancel button selected.");
     }
 
     @FXML
-    public void handleDeleteButton(ActionEvent e) throws Exception {
+    public void handleDeleteButton(ActionEvent event) throws Exception {
 
         if (getSelectedAccount() != null) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -515,11 +594,12 @@ public class MainWindowController {
         addAccountStage.showAndWait();
 
         System.out.println("Add account button selected");
-        resetButtonsAndFields();
+
+        loadAllLists();
     }
 
     @FXML
-    public void handleGeneratePasswordButton(ActionEvent e) throws IOException {
+    public void handleGeneratePasswordButton(ActionEvent event) throws IOException {
         try {
             FXMLLoader loader = new FXMLLoader((getClass().getResource("/com/example/pm/GeneratePasswordController.fxml")));
             Parent root = loader.load();

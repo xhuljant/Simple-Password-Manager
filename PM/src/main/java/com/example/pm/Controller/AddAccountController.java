@@ -114,6 +114,8 @@ public class AddAccountController {
                 if (accountAdded) {
                     accountManager.saveToFile(masterUsername, masterPassword);
                     System.out.println("Card Account Added");
+                }else {
+                    showAlert(Alert.AlertType.WARNING,"Error","Account already exists.");
                 }
                 generatorButton.getScene().getWindow().hide();
             }else{
@@ -132,6 +134,9 @@ public class AddAccountController {
                 if (accountAdded) {
                     accountManager.saveToFile(masterUsername, masterPassword);
                     System.out.println("Login Account Added");
+                }else {
+                    showAlert(Alert.AlertType.WARNING,"Error","Account already exists.");
+
                 }
                 generatorButton.getScene().getWindow().hide();
             }else {
@@ -148,6 +153,8 @@ public class AddAccountController {
                 if (accountAdded) {
                     accountManager.saveToFile(masterUsername, masterPassword);
                     System.out.println("Note Account Added");
+                }else {
+                    showAlert(Alert.AlertType.WARNING,"Error","Account already exists.");
                 }
                 generatorButton.getScene().getWindow().hide();
             } else {
