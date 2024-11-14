@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane minHeight="622.0" minWidth="753.0" prefHeight="622.0" prefWidth="758.0" stylesheets="@../CSS/styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pm.Controller.MainWindowController">
+    <children>
+      <BorderPane minHeight="622.0" minWidth="900" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <center>
+            <HBox alignment="TOP_CENTER" prefHeight="622.0" prefWidth="405.0" BorderPane.alignment="CENTER">
+               <children>
+                        <VBox fx:id="mainePaneButtons" alignment="TOP_CENTER" prefHeight="622.0" prefWidth="144.0">
+                     <children>
+                        <ImageView fitHeight="34.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../Media/lock.png" />
+                           </image>
+                           <VBox.margin>
+                              <Insets bottom="10.0" />
+                           </VBox.margin>
+                        </ImageView>
+                        <VBox fx:id="topButtons" alignment="TOP_CENTER" prefHeight="270.0" prefWidth="109.0" VBox.vgrow="ALWAYS">
+                           <children>
+                                      <Button fx:id="allAccountsButton" mnemonicParsing="false" onAction="#handleAllAccountsButton" prefHeight="35.0" prefWidth="123.0" text="All Accounts">
+                                          <VBox.margin>
+                                              <Insets bottom="10.0" />
+                                          </VBox.margin>
+                                      </Button>
+                                      <Button fx:id="loginAccountsButton" mnemonicParsing="false" onAction="#handleLoginAccountsButton" prefHeight="35.0" prefWidth="123.0" text="Logins">
+                                          <VBox.margin>
+                                              <Insets bottom="10.0" />
+                                          </VBox.margin>
+                                      </Button>
+                                      <Button fx:id="cardAccountsButton" mnemonicParsing="false" onAction="#handleCardAccountsButton" prefHeight="26.0" prefWidth="123.0" text="Cards">
+                                          <VBox.margin>
+                                              <Insets bottom="10.0" />
+                                          </VBox.margin>
+                                      </Button>
+                                      <Button fx:id="noteAccountsButton" mnemonicParsing="false" onAction="#handleNoteAccountsButton" prefHeight="26.0" prefWidth="123.0" text="Notes">
+                                          <VBox.margin>
+                                              <Insets bottom="100.0" />
+                                          </VBox.margin>
+                                      </Button>
+                           </children>
+                           <VBox.margin>
+                              <Insets left="1.0" />
+                           </VBox.margin>
+                        </VBox>
+                        <VBox fx:id="middleButtons" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS">
+                           <children>
+                              <Button fx:id="settingsButton" mnemonicParsing="false" onAction="#handleSettingsButton" prefHeight="26.0" prefWidth="123.0" text="Settings">
+                                  <VBox.margin>
+                                    <Insets bottom="10.0" />
+                                 </VBox.margin>
+                              </Button>
+                                    <Button fx:id="passwordGeneratorButton" mnemonicParsing="false" onAction="#handleGeneratePasswordButton" prefHeight="26.0" prefWidth="123.0" text="Generator">
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" />
+                                 </VBox.margin>
+                              </Button>
+                              <Button fx:id="exportButton" mnemonicParsing="false" onAction="#handleExportButton" prefHeight="26.0" prefWidth="90.0" text="Export" visible="false">
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" />
+                                 </VBox.margin>
+                              </Button>
+                              <Button fx:id="backupButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="90.0" text="Backup" visible="false">
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" />
+                                 </VBox.margin>
+                              </Button>
+                           </children>
+                        </VBox>
+                        <VBox fx:id="bottomButtons" alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="115.0" VBox.vgrow="ALWAYS">
+                           <children>
+                              <Text fx:id="currentUserTextField" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" textAlignment="CENTER" wrappingWidth="90.0">
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" />
+                                 </VBox.margin></Text>
+                              <Button fx:id="logoutButton" mnemonicParsing="false" onAction="#handleLogoutButton" prefHeight="26.0" prefWidth="123.0" text="Logout" />
+                           </children>
+                        </VBox>
+                     </children>
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </padding>
+                        </VBox>
+                  <VBox fx:id="accountLists" alignment="TOP_CENTER" maxWidth="400.0" minWidth="200.0" prefWidth="300.0">
+                     <children>
+                              <TextField fx:id="searchTextField" maxWidth="Infinity" prefHeight="26.0" prefWidth="200.0" promptText="Search">
+                                  <opaqueInsets>
+                                      <Insets left="10.0" right="10.0" />
+                                  </opaqueInsets>
+                           <VBox.margin>
+                              <Insets bottom="10.0" />
+                           </VBox.margin>
+                              </TextField>
+                        <StackPane fx:id="listViews" alignment="CENTER_LEFT" maxWidth="Infinity" prefWidth="217.0" VBox.vgrow="ALWAYS">
+                           <children>
+                                    <ListView fx:id="allAccountsListView" maxWidth="Infinity" prefHeight="513.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                                 <StackPane.margin>
+                                    <Insets bottom="10.0" />
+                                 </StackPane.margin>
+                              </ListView>
+                              <ListView fx:id="loginAccountsListView" maxWidth="Infinity" prefHeight="513.0" prefWidth="200.0" visible="false">
+                                 <StackPane.margin>
+                                    <Insets bottom="10.0" />
+                                 </StackPane.margin></ListView>
+                              <ListView fx:id="cardAccountsListView" maxWidth="Infinity" prefHeight="513.0" prefWidth="200.0" visible="false">
+                                 <StackPane.margin>
+                                    <Insets bottom="10.0" />
+                                 </StackPane.margin></ListView>
+                              <ListView fx:id="noteAccountsListView" maxWidth="Infinity" prefHeight="513.0" prefWidth="200.0" visible="false">
+                                 <StackPane.margin>
+                                    <Insets bottom="10.0" />
+                                 </StackPane.margin></ListView>
+                           </children>
+                        </StackPane>
+                              <Button fx:id="addAccountButton" focusTraversable="false" maxWidth="Infinity" mnemonicParsing="false" onAction="#handleAddAccountButton" prefWidth="200.0" scaleShape="false" wrapText="true" VBox.vgrow="ALWAYS">
+                           <graphic>
+                              <ImageView fitHeight="13.0" fitWidth="15.0" focusTraversable="true" pickOnBounds="true">
+                                 <image>
+                                    <Image url="@../Media/plusbutton.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                           <tooltip>
+                              <Tooltip text="Add Account" />
+                           </tooltip>
+                        </Button>
+                     </children>
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </padding>
+                  </VBox>
+                  <VBox fx:id="accountDetails" alignment="CENTER" prefHeight="622.0" prefWidth="287.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <AnchorPane prefHeight="556.0" prefWidth="298.0" VBox.vgrow="ALWAYS">
+                           <children>
+                                    <Text fx:id="itemInformationText" layoutY="15.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Item Information" wrappingWidth="279.158203125">
+                                        <font>
+                                            <Font size="21.0" />
+                                        </font>
+                                    </Text>
+                                    <AnchorPane fx:id="cardDetailsPane" layoutY="40.0" prefHeight="506.0" prefWidth="279.0">
+                                        <children>
+                                            <VBox layoutY="-1.0" prefHeight="467.0" prefWidth="240.0">
+                                                <children>
+                                                    <Text fx:id="cardNameText" strokeType="OUTSIDE" strokeWidth="0.0" text="Card Name">
+                                                        <VBox.margin>
+                                                            <Insets bottom="5.0" />
+                                                        </VBox.margin>
+                                                    </Text>
+                                                    <TextField fx:id="cardNameTextField" editable="false" prefHeight="26.0" prefWidth="264.0">
+                                                        <VBox.margin>
+                                                            <Insets bottom="10.0" />
+                                                        </VBox.margin>
+                                                    </TextField>
+                                                    <Text fx:id="cardNumberText" strokeType="OUTSIDE" strokeWidth="0.0" text="Card Number">
+                                                        <VBox.margin>
+                                                            <Insets bottom="5.0" />
+                                                        </VBox.margin>
+                                                    </Text>
+                                                    <TextField fx:id="cardNumberTextField" editable="false" prefHeight="26.0" prefWidth="244.0">
+                                                        <VBox.margin>
+                                                            <Insets bottom="10.0" />
+                                                        </VBox.margin>
+                                                    </TextField>
+                                                    <Text fx:id="expDateText" strokeType="OUTSIDE" strokeWidth="0.0" text="Exp Date">
+                                                        <VBox.margin>
+                                                            <Insets bottom="5.0" />
+                                                        </VBox.margin>
+                                                    </Text>
+                                                    <TextField fx:id="expDateTextField" editable="false">
+                                                        <VBox.margin>
+                                                            <Insets bottom="10.0" />
+                                                        </VBox.margin>
+                                                    </TextField>
+                                                    <Text fx:id="secCodeText" strokeType="OUTSIDE" strokeWidth="0.0" text="Sec Code">
+                                                        <VBox.margin>
+                                                            <Insets bottom="5.0" />
+                                                        </VBox.margin>
+                                                    </Text>
+                                                    <TextField fx:id="secCodeTextField" editable="false">
+                                                        <VBox.margin>
+                                                            <Insets bottom="10.0" />
+                                                        </VBox.margin>
+                                                    </TextField>
+                                                    <Text fx:id="cardHolderNameText" strokeType="OUTSIDE" strokeWidth="0.0" text="Card Holder Name">
+                                                        <VBox.margin>
+                                                            <Insets bottom="5.0" />
+                                                        </VBox.margin>
+                                                    </Text>
+                                                    <TextField fx:id="cardHolderNameTextField" editable="false">
+                                                        <VBox.margin>
+                                                            <Insets bottom="10.0" />
+                                                        </VBox.margin>
+                                                    </TextField>
+                                                </children>
+                                            </VBox>
+                                            <Button fx:id="copyCardNumberButton" layoutX="250.0" layoutY="98.0" mnemonicParsing="false" onAction="#handleCopyCardNumberButton" prefHeight="26.0" prefWidth="29.0">
+                                       <graphic>
+                                          <ImageView fitHeight="14.0" fitWidth="12.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../Media/copyButton.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                    </Button>
+                                            <Button fx:id="copyExpDateButton" layoutX="250.0" layoutY="170.0" mnemonicParsing="false" onAction="#handleCopyExpDateButton" prefHeight="26.0" prefWidth="29.0">
+                                       <graphic>
+                                          <ImageView fitHeight="14.0" fitWidth="12.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../Media/copyButton.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                    </Button>
+                                            <Button fx:id="copySecCodeButton" layoutX="250.0" layoutY="243.0" mnemonicParsing="false" onAction="#handleCopySecCodeButton" prefHeight="26.0" prefWidth="29.0">
+                                       <graphic>
+                                          <ImageView fitHeight="14.0" fitWidth="12.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../Media/copyButton.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                    </Button>
+                                        </children>
+                                    </AnchorPane>
+                                    <AnchorPane fx:id="noteDetailsPane" layoutY="40.0" prefHeight="506.0" prefWidth="289.0">
+                                        <children>
+                                            <VBox layoutY="-1.0" prefHeight="467.0" prefWidth="285.0">
+                                                <children>
+                                                    <Text fx:id="noteText" strokeType="OUTSIDE" strokeWidth="0.0" text="Note">
+                                                        <VBox.margin>
+                                                            <Insets bottom="5.0" />
+                                                        </VBox.margin>
+                                                    </Text>
+                                          <TextField fx:id="noteNameTextField">
+                                             <VBox.margin>
+                                                <Insets bottom="10.0" />
+                                             </VBox.margin>
+                                          </TextField>
+                                          <TextArea fx:id="noteContentTextArea" prefHeight="200.0" prefWidth="200.0" />
+                                                </children>
+                                            </VBox>
+                                        </children>
+                                    </AnchorPane>
+                                    <AnchorPane fx:id="loginDetailsPane" layoutY="40.0" prefHeight="506.0" prefWidth="279.0">
+                                        <children>
+                                            <VBox layoutY="-1.0" prefHeight="467.0" prefWidth="240.0">
+                                                <children>
+                                                    <Text fx:id="accountNameText" strokeType="OUTSIDE" strokeWidth="0.0" text="Account Name">
+                                                        <VBox.margin>
+                                                            <Insets bottom="5.0" />
+                                                        </VBox.margin>
+                                                    </Text>
+                                                    <TextField fx:id="accountNameTextField" editable="false" prefHeight="26.0" prefWidth="265.0">
+                                                        <VBox.margin>
+                                                            <Insets bottom="10.0" />
+                                                        </VBox.margin>
+                                                    </TextField>
+                                                    <Text fx:id="usernameText" strokeType="OUTSIDE" strokeWidth="0.0" text="Username">
+                                                        <VBox.margin>
+                                                            <Insets bottom="5.0" />
+                                                        </VBox.margin>
+                                                    </Text>
+                                                    <TextField fx:id="usernameTextField" editable="false">
+                                                        <VBox.margin>
+                                                            <Insets bottom="10.0" />
+                                                        </VBox.margin>
+                                                    </TextField>
+                                                    <Text fx:id="passwordText" strokeType="OUTSIDE" strokeWidth="0.0" text="Password">
+                                                        <VBox.margin>
+                                                            <Insets bottom="5.0" />
+                                                        </VBox.margin>
+                                                    </Text>
+                                                    <TextField fx:id="passwordTextField" editable="false">
+                                                        <VBox.margin>
+                                                            <Insets bottom="10.0" />
+                                                        </VBox.margin>
+                                                    </TextField>
+                                                    <Text fx:id="notesText" strokeType="OUTSIDE" strokeWidth="0.0" text="Notes">
+                                                        <VBox.margin>
+                                                            <Insets bottom="5.0" />
+                                                        </VBox.margin>
+                                                    </Text>
+                                                    <TextArea fx:id="notesTextField" editable="false" prefHeight="266.0" prefWidth="273.0">
+                                                        <VBox.margin>
+                                                            <Insets bottom="10.0" />
+                                                        </VBox.margin>
+                                                    </TextArea>
+                                                </children>
+                                            </VBox>
+                                            <Button fx:id="copyUserNameButton" layoutX="250.0" layoutY="99.0" mnemonicParsing="false" onAction="#handleCopyUsernameButton" prefHeight="26.0" prefWidth="29.0">
+                                       <graphic>
+                                          <ImageView fitHeight="14.0" fitWidth="12.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../Media/copyButton.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                       <tooltip>
+                                          <Tooltip text="Copy" />
+                                       </tooltip>
+                                    </Button>
+                                            <Button fx:id="copyPasswordButton" layoutX="250.0" layoutY="170.0" mnemonicParsing="false" onAction="#handleCopyPasswordButton" prefHeight="26.0" prefWidth="29.0">
+                                       <graphic>
+                                          <ImageView fitHeight="14.0" fitWidth="12.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../Media/copyButton.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                       <tooltip>
+                                          <Tooltip text="Copy" />
+                                       </tooltip>
+                                    </Button>
+                                        </children>
+                                    </AnchorPane>
+                           </children>
+                        </AnchorPane>
+                        <HBox alignment="BOTTOM_LEFT" prefHeight="36.0" prefWidth="276.0" VBox.vgrow="ALWAYS">
+                           <children>
+                              <Button fx:id="editAccountButton" mnemonicParsing="false" onAction="#handleEditAccountButton" prefHeight="26.0" prefWidth="54.0">
+                                 <graphic>
+                                    <ImageView fitHeight="17.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../Media/edit.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                                 <tooltip>
+                                    <Tooltip text="Edit" />
+                                 </tooltip>
+                                 <HBox.margin>
+                                    <Insets right="10.0" />
+                                 </HBox.margin>
+                              </Button>
+                              <Button fx:id="saveAccountButton" mnemonicParsing="false" onAction="#handleSaveButton" prefHeight="26.0" prefWidth="54.0" visible="false">
+                                 <graphic>
+                                    <ImageView fitHeight="17.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../Media/savebutton.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                                 <HBox.margin>
+                                    <Insets right="10.0" />
+                                 </HBox.margin>
+                                 <tooltip>
+                                    <Tooltip text="Save" />
+                                 </tooltip>
+                              </Button>
+                              <Button fx:id="cancelEditButton" mnemonicParsing="false" onAction="#handleCancelButton" prefHeight="35.0" prefWidth="96.0" text="Cancel" visible="false">
+                                 <HBox.margin>
+                                    <Insets right="10.0" />
+                                 </HBox.margin>
+                              </Button>
+                              <Button fx:id="deleteAccountButton" mnemonicParsing="false" onAction="#handleDeleteButton" prefHeight="26.0" prefWidth="54.0">
+                                 <graphic>
+                                    <ImageView fitHeight="17.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../Media/trash.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                                 <tooltip>
+                                    <Tooltip text="Delete" />
+                                 </tooltip>
+                                 <HBox.margin>
+                                    <Insets right="10.0" />
+                                 </HBox.margin>
+                              </Button>
+                           </children>
+                        </HBox>
+                     </children>
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </padding>
+                  </VBox>
+               </children>
+               <BorderPane.margin>
+                  <Insets left="5.0" />
+               </BorderPane.margin>
+            </HBox>
+         </center>
+      </BorderPane>
+    </children>
+</AnchorPane>
