@@ -1,5 +1,6 @@
 package com.example.pm.Controller;
 
+import com.example.pm.Model.AccountManager;
 import com.example.pm.Model.EncryptionService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,6 +18,7 @@ import javafx.stage.Window;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +34,7 @@ public class SettingsWindowController {
 
     public void handleChangeMasterPasswordButton(){
         try {
-            FXMLLoader loader = new FXMLLoader((getClass().getResource("/com/example/pm/ChangePasswordController.fxml")));
+            FXMLLoader loader = new FXMLLoader((getClass().getResource("/FXML/ChangePasswordController.fxml")));
             Parent root = loader.load();
 
             Stage generatePasswordStage = new Stage();
@@ -51,7 +53,7 @@ public class SettingsWindowController {
     @FXML
     public void handleChangeUsernameButton(){
         try {
-            FXMLLoader loader = new FXMLLoader((getClass().getResource("/com/example/pm/ChangeUsernameController.fxml")));
+            FXMLLoader loader = new FXMLLoader((getClass().getResource("/FXML/ChangeUsernameController.fxml")));
             Parent root = loader.load();
 
             Stage generatePasswordStage = new Stage();
@@ -70,7 +72,7 @@ public class SettingsWindowController {
     @FXML
     public void handleDeleteAccountButton() {
         try {
-            FXMLLoader loader = new FXMLLoader((getClass().getResource("/com/example/pm/DeleteAccountController.fxml")));
+            FXMLLoader loader = new FXMLLoader((getClass().getResource("/FXML/DeleteAccountController.fxml")));
             Parent root = loader.load();
 
             Stage generatePasswordStage = new Stage();
@@ -87,36 +89,51 @@ public class SettingsWindowController {
     }
 
     @FXML
-    public void handleExportButton(){
-        EncryptionService encryptionService=new EncryptionService();
-        File sourceFile= new File("Data/"+encryptionService.generateFileName(username));
+    public void handleExportButton() throws IOException {
+        try {
 
-        DirectoryChooser directoryChooser = new DirectoryChooser();
-        directoryChooser.setTitle("Select Folder");
-        Stage currentStage = (Stage) DeleteAccount.getScene().getWindow();
-        File selectedDirectory = directoryChooser.showDialog(currentStage);
+            EncryptionService encryptionService = new EncryptionService();
 
-        if(selectedDirectory!=null){
+            Path dataDir = AccountManager.getAppDataDirectory().resolve("data");
+            Path sourceFile = dataDir.resolve(encryptionService.generateFileName(username));
 
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Confirm Export");
-            alert.setHeaderText("Export File");
-            alert.setContentText("Export file to "+selectedDirectory.getAbsolutePath()+" ?");
+            if(!Files.exists(sourceFile)){
+                showAlert(Alert.AlertType.ERROR,"Error","Unable to get file to export.");
+                return;
+            }
 
-            alert.showAndWait().ifPresent(response -> {
-                if(response==ButtonType.OK){
-                    try{
-                        File copiedFile=new File(selectedDirectory,sourceFile.getName());
-                        Files.copy(sourceFile.toPath(),copiedFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                        System.out.println("File Exported Successfully.");
-                    }catch (Exception e){
-                        System.out.println("File Exported Successfully.");
-                        e.printStackTrace();
+            DirectoryChooser directoryChooser = new DirectoryChooser();
+            directoryChooser.setTitle("Select Export Location");
+            Stage currentStage = (Stage) DeleteAccount.getScene().getWindow();
+            File selectedDirectory = directoryChooser.showDialog(currentStage);
+
+            if (selectedDirectory != null) {
+
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Confirm Export");
+                alert.setHeaderText("Export File");
+                alert.setContentText("Export file to " + selectedDirectory.getAbsolutePath() + " ?");
+
+                alert.showAndWait().ifPresent(response -> {
+                    if (response == ButtonType.OK) {
+                        try {
+                            Path destinationPath = selectedDirectory.toPath().resolve(sourceFile.getFileName());
+                            Files.copy(sourceFile, destinationPath, StandardCopyOption.REPLACE_EXISTING);
+                            showAlert(Alert.AlertType.INFORMATION, "Success", "File exported successfully to " + selectedDirectory.getAbsolutePath());
+                            System.out.println("File Exported Successfully.");
+                        } catch (Exception e) {
+                            showAlert(Alert.AlertType.ERROR, "Error", "File not exported. ");
+                            System.err.println(e.getMessage());
+                            e.printStackTrace();
+                        }
+                    } else {
+                        System.out.println("File not exported.");
                     }
-                }else {
-                    System.out.println("File not exported.");
-                }
-            });
+                });
+            }
+        }catch (Exception e){
+            showAlert(Alert.AlertType.ERROR,"Error","Failed to export file.");
+            System.err.println("Error exporting file:"+e.getMessage());
         }
     }
 

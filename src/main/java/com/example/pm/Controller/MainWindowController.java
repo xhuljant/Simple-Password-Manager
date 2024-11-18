@@ -7,9 +7,13 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.AnchorPane;
@@ -18,8 +22,11 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
@@ -70,6 +77,7 @@ public class MainWindowController {
     @FXML private TextField accountNameTextField;
     @FXML private TextField usernameTextField;
     @FXML private TextField passwordTextField;
+    @FXML private TextField websiteTextfield;
     @FXML private TextArea notesTextField;
 
     //card accounts
@@ -89,6 +97,7 @@ public class MainWindowController {
         accountManager = new AccountManager();
         setupListViews();
         setupSearchFunctionality();
+        setupWebsiteFields();
     }
 
     private void setupListViews(){
@@ -138,6 +147,27 @@ public class MainWindowController {
             filterAccounts(newValue);
         });
 
+    }
+
+    private void setupWebsiteFields(){
+        websiteTextfield.setOnMouseClicked(event -> {
+            if(!websiteTextfield.isEditable() && !websiteTextfield.getText().isEmpty())
+                openWebsite(websiteTextfield.getText());
+        });
+
+        websiteTextfield.setOnMouseEntered(event -> {
+            if (!websiteTextfield.isEditable() && !websiteTextfield.getText().isEmpty()) {
+                websiteTextfield.setCursor(Cursor.HAND);
+                websiteTextfield.setStyle("-fx-underline: true; -fx-text-fill: white;");
+            }
+        });
+
+        websiteTextfield.setOnMouseExited(event -> {
+            if (!websiteTextfield.isEditable()) {
+                websiteTextfield.setCursor(Cursor.DEFAULT);
+                websiteTextfield.setStyle("");
+            }
+        });
     }
 
     private void filterAccounts(String searchText) {
@@ -299,6 +329,7 @@ public class MainWindowController {
         accountNameTextField.setText(account.getAccountName());
         usernameTextField.setText(account.getUsername());
         passwordTextField.setText(account.getPassword());
+        websiteTextfield.setText(account.getWebsite());
         notesTextField.setText(account.getNotes());
 
         editAccountButton.setVisible(true);
@@ -368,6 +399,7 @@ public class MainWindowController {
         accountNameTextField.setEditable(false);
         usernameTextField.setEditable(false);
         passwordTextField.setEditable(false);
+        websiteTextfield.setEditable(false);
         notesTextField.setEditable(false);
 
         cardNumberTextField.setEditable(false);
@@ -431,6 +463,7 @@ public class MainWindowController {
             accountNameTextField.setEditable(true);
             usernameTextField.setEditable(true);
             passwordTextField.setEditable(true);
+            websiteTextfield.setEditable(true);
             notesTextField.setEditable(true);
         }
 
@@ -463,6 +496,7 @@ public class MainWindowController {
                 LoginAccount newAccount = new LoginAccount.Builder(accountNameTextField.getText())
                         .username(usernameTextField.getText())
                         .password(passwordTextField.getText())
+                        .website(websiteTextfield.getText())
                         .notes(notesTextField.getText())
                         .build();
 
@@ -613,13 +647,21 @@ public class MainWindowController {
 
             Stage generatePasswordStage = new Stage();
             generatePasswordStage.setTitle("Password Generator");
+            generatePasswordStage.setAlwaysOnTop(true);
 
-            //generatePasswordStage.initModality(Modality.APPLICATION_MODAL);
-            //generatePasswordStage.initOwner(addAccountButton.getScene().getWindow());
+            Stage mainWindow = (Stage) addAccountButton.getScene().getWindow();
+
+            mainWindow.setOnCloseRequest(e ->{
+                generatePasswordStage.close();
+            });
+
             generatePasswordStage.setScene(new Scene(root));
             generatePasswordStage.setResizable(false);
-            generatePasswordStage.showAndWait();
-            passwordGeneratorButton.setDisable(false);
+            generatePasswordStage.show();
+
+            generatePasswordStage.setOnHidden(e -> {
+                passwordGeneratorButton.setDisable(false);
+            });
 
         } catch (Exception exception) {
             exception.printStackTrace();
@@ -666,6 +708,26 @@ public class MainWindowController {
         }
     }
 
+    private void openWebsite(String url){
+        if(url == null || url.trim().isEmpty()){
+            return;
+        }
+
+        url=url.replaceAll("^(https?://)", "");
+        url=url.replaceAll("/$", "");
+        url=url.replaceAll("^www\\.", "");
+        url="https://"+url;
+
+        try{
+            Desktop.isDesktopSupported();
+            Desktop desktop = Desktop.getDesktop();
+            desktop.browse(new URI(url));
+        }catch (IOException | URISyntaxException e) {
+            showAlert(Alert.AlertType.WARNING,
+                    "Error",
+                    "Could not open website: " + e.getMessage());
+        }
+    }
 
     @FXML public void handleCopyUsernameButton(){
         final Clipboard clipboard=Clipboard.getSystemClipboard();

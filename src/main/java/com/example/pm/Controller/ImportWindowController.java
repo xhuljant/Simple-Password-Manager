@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
 public class ImportWindowController {
@@ -39,7 +40,7 @@ public class ImportWindowController {
     }
 
     @FXML
-    private void handleImportButton(){
+    private void handleImportButton() {
         EncryptionService encryptionService = new EncryptionService();
         File selectedFile = new File(fileLocation.getText());
 
@@ -48,49 +49,58 @@ public class ImportWindowController {
             return;
         }
 
-        if(selectedFile.getName().equals(encryptionService.generateFileName(usernameTextField.getText()))){
+        if(selectedFile.getName().equals(encryptionService.generateFileName(usernameTextField.getText()))) {
             String encryptedData;
 
             try (BufferedReader reader = new BufferedReader(new FileReader(fileLocation.getText()))) {
                 encryptedData = reader.readLine();
 
-                encryptionService.decrypt(encryptedData,passwordTextField.getText());
+                encryptionService.decrypt(encryptedData, passwordTextField.getText());
 
-                File destinationFile=new File("Data/"+encryptionService.generateFileName(usernameTextField.getText()));
+                Path dataDir = AccountManager.getAppDataDirectory().resolve("Data");
+                Files.createDirectories(dataDir);
+                Path destinationPath = dataDir.resolve(encryptionService.generateFileName(usernameTextField.getText()));
+                File destinationFile = destinationPath.toFile();
 
-                if(destinationFile.exists()){
+                if(destinationFile.exists()) {
                     Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                    alert.setTitle("Confirm Export");
-                    alert.setHeaderText("Export File");
+                    alert.setTitle("Import File");
+                    alert.setHeaderText("Import File");
                     alert.setContentText("File already exists in this directory, would you like to replace the file?");
 
                     alert.showAndWait().ifPresent(response -> {
-                        if(response== ButtonType.OK){
+                        if(response == ButtonType.OK) {
                             try {
-                                Files.copy(selectedFile.toPath(),destinationFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                                Files.copy(selectedFile.toPath(), destinationPath, StandardCopyOption.REPLACE_EXISTING);
                                 importButton.getScene().getWindow().hide();
                                 System.out.println("File imported.");
                             } catch (IOException e) {
-                                showAlert(Alert.AlertType.WARNING,"Error","File was not imported successfully.");
+                                showAlert(Alert.AlertType.WARNING, "Error", "File was not imported successfully.");
                                 e.printStackTrace();
                             }
-                        }else{
+                        } else {
                             System.out.println("File not imported.");
                         }
                     });
-
-                }else {
-                    Files.copy(selectedFile.toPath(),destinationFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                } else {
+                    Files.copy(selectedFile.toPath(), destinationPath, StandardCopyOption.REPLACE_EXISTING);
                     importButton.getScene().getWindow().hide();
                     System.out.println("File imported.");
                 }
-            }catch (Exception e){
+
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("FIle Imported");
+                alert.setHeaderText("File Imported");
+                alert.setContentText("File imported, you can now log in with the username and password.");
+                alert.showAndWait();
+
+            } catch (Exception e) {
                 System.out.println("Incorrect Password.");
-                showAlert(Alert.AlertType.WARNING,"Error","Incorrect Password.");
+                showAlert(Alert.AlertType.WARNING, "Error", "Incorrect Password.");
             }
-        }else {
+        } else {
             System.out.println("Incorrect Username.");
-            showAlert(Alert.AlertType.WARNING,"Error","Incorrect Username.");
+            showAlert(Alert.AlertType.WARNING, "Error", "Incorrect Username.");
         }
     }
 

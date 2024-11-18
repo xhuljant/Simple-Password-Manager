@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="475.0" prefWidth="350.0" stylesheets="@../CSS/styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pm.Controller.AddAccountController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="544.0" prefWidth="350.0" stylesheets="@../CSS/styles.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pm.Controller.AddAccountController">
     <children>
       <ChoiceBox fx:id="accountTypeChoiceBox" layoutX="13.0" layoutY="10.0" onAction="#handleChoiceBox">
           <items>
@@ -25,7 +25,7 @@
       </ChoiceBox>
         <AnchorPane fx:id="loginAccountPane" layoutX="13.0" layoutY="60.0" prefHeight="353.0" prefWidth="325.0">
             <children>
-                <VBox fx:id="loginAccountVBox" prefHeight="329.0" prefWidth="324.0">
+                <VBox fx:id="loginAccountVBox" prefHeight="400.0" prefWidth="324.0">
                     <children>
                         <Text fx:id="accountNameText" strokeType="OUTSIDE" strokeWidth="0.0" text="Account Name">
                             <VBox.margin>
@@ -57,12 +57,22 @@
                                 <Insets bottom="10.0" />
                             </VBox.margin>
                         </TextField>
+                  <Text fx:id="websiteText" strokeType="OUTSIDE" strokeWidth="0.0" text="Website" wrappingWidth="65.97789764404297">
+                     <VBox.margin>
+                        <Insets bottom="5.0" />
+                     </VBox.margin>
+                  </Text>
+                  <TextField fx:id="websiteTextfield" prefHeight="26.0" prefWidth="290.0">
+                     <VBox.margin>
+                        <Insets bottom="10.0" />
+                     </VBox.margin>
+                  </TextField>
                         <Text fx:id="loginNoteText" strokeType="OUTSIDE" strokeWidth="0.0" text="Notes" wrappingWidth="65.97789764404297">
                             <VBox.margin>
                                 <Insets bottom="5.0" />
                             </VBox.margin>
                         </Text>
-                        <TextArea fx:id="loginNoteArea" prefHeight="86.0" prefWidth="321.0">
+                        <TextArea fx:id="loginNoteArea" prefHeight="68.0" prefWidth="324.0">
                             <VBox.margin>
                                 <Insets bottom="10.0" />
                             </VBox.margin>
@@ -157,8 +167,8 @@
             </VBox>
          </children>
         </AnchorPane>
-        <Button fx:id="generatorButton" layoutX="152.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleGeneratorButton" prefHeight="36.0" prefWidth="185.0" text="Password Generator" />
+        <Button fx:id="passwordGeneratorButton" layoutX="152.0" layoutY="10.0" mnemonicParsing="false" onAction="#handlePasswordGeneratorButton" prefHeight="36.0" prefWidth="185.0" text="Password Generator" />
         <Button fx:id="cancelButton" layoutX="255.0" layoutY="342.0" mnemonicParsing="false" onAction="#handleCancelButton" prefHeight="39.0" prefWidth="81.0" text="Cancel" visible="false" />
-        <Button fx:id="saveButton" defaultButton="true" layoutX="84.0" layoutY="405.0" mnemonicParsing="false" onAction="#handleSaveButton" prefHeight="50.0" prefWidth="193.0" text="Save" />
+        <Button fx:id="saveButton" defaultButton="true" layoutX="80.0" layoutY="469.0" mnemonicParsing="false" onAction="#handleSaveButton" prefHeight="50.0" prefWidth="193.0" text="Save" />
     </children>
 </AnchorPane>

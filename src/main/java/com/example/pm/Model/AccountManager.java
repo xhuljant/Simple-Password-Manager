@@ -23,8 +23,10 @@ public class AccountManager{
      * 1=Card Account
      * 2=Note Account
      */
-    private static final String DATA_DIRECTORY="Data/"; //combined with EncryptionService.generateFileName() to give location for accountMap to be saved
+
     private Map<Integer,List<Account>> accountMap;
+    private static final String APP_NAME = "Password Manager";
+    private static final String FILE_EXTENSION = ".db";
 
     /**
      * Constructor takes no parameters
@@ -122,7 +124,7 @@ public class AccountManager{
         username=username.toLowerCase(Locale.ROOT);
         EncryptionService encryptionService = new EncryptionService();
         String fileName = encryptionService.generateFileName(username);
-        Path filePath = Paths.get(DATA_DIRECTORY, fileName);
+        Path filePath = getDataDirectory().resolve(fileName);
         return Files.exists(filePath);
     }
 
@@ -150,10 +152,8 @@ public class AccountManager{
 
         String fileName = encryptionService.generateFileName(username);
 
-        Path directoryPath = Paths.get(DATA_DIRECTORY);
-        Files.createDirectories(directoryPath);
-
-        Path filePath = directoryPath.resolve(fileName);
+        Path dataDir = getDataDirectory();
+        Path filePath = dataDir.resolve(fileName);
         Files.write(filePath, encryptedData.getBytes(StandardCharsets.UTF_8));
     }
 
@@ -168,19 +168,13 @@ public class AccountManager{
      */
     // New method to load encrypted accountMap from file
     public static AccountManager loadFromFile(String username, String password) throws Exception {
-        if(verifyAccess(username,password)){
-            try{
-                EncryptionService encryptionService=new EncryptionService();
-
-                // Generate file name
+        if (verifyAccess(username, password)) {
+            try {
+                EncryptionService encryptionService = new EncryptionService();
                 String fileName = encryptionService.generateFileName(username);
+                Path filePath = getDataDirectory().resolve(fileName);
 
-                // Read encrypted data from file
-                String encryptedData;
-                try (BufferedReader reader = new BufferedReader(new FileReader(DATA_DIRECTORY+fileName))) {
-                    encryptedData = reader.readLine();
-                }
-
+                String encryptedData = Files.readString(filePath);
                 String decryptedData = encryptionService.decrypt(encryptedData, password);
 
                 byte[] serializedData = Base64.getDecoder().decode(decryptedData);
@@ -191,11 +185,11 @@ public class AccountManager{
                 AccountManager manager = new AccountManager();
                 manager.accountMap = loadedMap;
                 return manager;
-            }catch (Exception e){
-                System.out.println("Error:"+e.getMessage());
+            } catch (Exception e) {
+                System.out.println("Error:" + e.getMessage());
                 return null;
             }
-        }else {
+        } else {
             System.out.println("Access denied, incorrect password");
             return null;
         }
@@ -217,16 +211,11 @@ public class AccountManager{
 
             EncryptionService encryptionService = new EncryptionService();
             String fileName = encryptionService.generateFileName(username);
-            Path filePath = Paths.get(DATA_DIRECTORY, fileName);
+            Path filePath = getDataDirectory().resolve(fileName);
 
-            String encryptedData;
-            try (BufferedReader reader = new BufferedReader(new FileReader(filePath.toFile()))) {
-                encryptedData = reader.readLine(); //Assumes the entire encrypted data is on one line
-            }
-
+            String encryptedData = Files.readString(filePath);
             String decryptedData = encryptionService.decrypt(encryptedData, password);
 
-            // If no exceptions were thrown, the password is correct and access is verified
             System.out.println("Access verified for username: " + username);
             return true;
         } catch (IOException e) {
@@ -247,7 +236,7 @@ public class AccountManager{
      * @return true or false if new file is saved or false if access is denied or file is not written
      */
     public boolean changePassword(String username, String currentPassword, String newPassword){
-        try{
+        try {
             if (!verifyAccess(username, currentPassword)) {
                 System.out.println("Current password is incorrect");
                 return false;
@@ -255,23 +244,50 @@ public class AccountManager{
 
             EncryptionService encryptionService = new EncryptionService();
             String fileName = encryptionService.generateFileName(username);
-            Path filePath = Paths.get(DATA_DIRECTORY,fileName);
-            String encryptedData;
+            Path filePath = getDataDirectory().resolve(fileName);
 
-            BufferedReader reader = new BufferedReader(new FileReader(filePath.toFile()));
-            encryptedData=reader.readLine();
-
-
-            String newEncryptedData = encryptionService.changePassword(encryptedData,currentPassword,newPassword);
+            String encryptedData = Files.readString(filePath);
+            String newEncryptedData = encryptionService.changePassword(encryptedData, currentPassword, newPassword);
             Files.write(filePath, newEncryptedData.getBytes(StandardCharsets.UTF_8));
             System.out.println("Password changed.");
 
             return true;
-
-        }catch (Exception e){
+        } catch (Exception e) {
             e.getMessage();
             System.out.println("Unable to change password.");
             return false;
         }
+    }
+
+    public static Path getDataDirectory(){
+        try{
+            Path appDataPath = getAppDataDirectory();
+            Path dataPath = appDataPath.resolve("Data");
+            Files.createDirectories(dataPath);
+            return dataPath;
+        }catch (IOException e){
+            throw new RuntimeException("Failed to create data directory", e);
+        }
+    }
+
+    public static Path getAppDataDirectory() throws IOException{
+        String OS = System.getProperty("os.name");
+        //System.out.println("Operating System: " + OS);
+        Path appDataPath;
+
+        if(OS.contains("win")){
+            appDataPath = Paths.get(System.getenv("APPDATA"), APP_NAME);
+        } else if (OS.equals("Mac OS X")) {
+            appDataPath = Paths.get(System.getProperty("user.home"),
+                    "Library",
+                    "Application Support",
+                    APP_NAME);
+            //System.out.println("Creating macOS app directory at: " + appDataPath);
+        }else {
+            appDataPath=Paths.get(System.getProperty("user.home"),APP_NAME.toLowerCase());
+        }
+
+        Files.createDirectories(appDataPath);
+        return appDataPath;
     }
 }

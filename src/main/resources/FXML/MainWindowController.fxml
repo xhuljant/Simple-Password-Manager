@@ -16,7 +16,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane minHeight="622.0" minWidth="753.0" prefHeight="622.0" prefWidth="758.0" stylesheets="@../CSS/styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pm.Controller.MainWindowController">
+<AnchorPane minHeight="622.0" minWidth="753.0" prefHeight="622.0" prefWidth="758.0" stylesheets="@../CSS/styles.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pm.Controller.MainWindowController">
     <children>
       <BorderPane minHeight="622.0" minWidth="900" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <center>
@@ -154,7 +154,7 @@
                                             <Font size="21.0" />
                                         </font>
                                     </Text>
-                                    <AnchorPane fx:id="cardDetailsPane" layoutY="40.0" prefHeight="506.0" prefWidth="279.0">
+                                    <AnchorPane fx:id="cardDetailsPane" layoutY="40.0" prefHeight="506.0" prefWidth="279.0" visible="false">
                                         <children>
                                             <VBox layoutY="-1.0" prefHeight="467.0" prefWidth="240.0">
                                                 <children>
@@ -239,7 +239,7 @@
                                     </Button>
                                         </children>
                                     </AnchorPane>
-                                    <AnchorPane fx:id="noteDetailsPane" layoutY="40.0" prefHeight="506.0" prefWidth="289.0">
+                                    <AnchorPane fx:id="noteDetailsPane" layoutY="40.0" prefHeight="506.0" prefWidth="289.0" visible="false">
                                         <children>
                                             <VBox layoutY="-1.0" prefHeight="467.0" prefWidth="285.0">
                                                 <children>
@@ -260,7 +260,7 @@
                                     </AnchorPane>
                                     <AnchorPane fx:id="loginDetailsPane" layoutY="40.0" prefHeight="506.0" prefWidth="279.0">
                                         <children>
-                                            <VBox layoutY="-1.0" prefHeight="467.0" prefWidth="240.0">
+                                            <VBox layoutY="-1.0" prefHeight="499.0" prefWidth="240.0">
                                                 <children>
                                                     <Text fx:id="accountNameText" strokeType="OUTSIDE" strokeWidth="0.0" text="Account Name">
                                                         <VBox.margin>
@@ -292,6 +292,16 @@
                                                             <Insets bottom="10.0" />
                                                         </VBox.margin>
                                                     </TextField>
+                                          <Text fx:id="websiteText" strokeType="OUTSIDE" strokeWidth="0.0" text="Website">
+                                             <VBox.margin>
+                                                <Insets bottom="5.0" />
+                                             </VBox.margin>
+                                          </Text>
+                                          <TextField fx:id="websiteTextfield" editable="false">
+                                             <VBox.margin>
+                                                <Insets bottom="10.0" />
+                                             </VBox.margin>
+                                          </TextField>
                                                     <Text fx:id="notesText" strokeType="OUTSIDE" strokeWidth="0.0" text="Notes">
                                                         <VBox.margin>
                                                             <Insets bottom="5.0" />

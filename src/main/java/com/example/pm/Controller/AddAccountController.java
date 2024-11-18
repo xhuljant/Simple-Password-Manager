@@ -31,6 +31,7 @@ public class AddAccountController {
     @FXML public MenuItem noteAccount;
     @FXML public Button deleteButton;
     @FXML private ChoiceBox<String> accountTypeChoiceBox;
+    @FXML private Button generatorButton;
 
     @FXML private AnchorPane loginAccountPane;
     @FXML private VBox logginAccountVBox;
@@ -42,9 +43,10 @@ public class AddAccountController {
     @FXML private TextField usernameTextField;
     @FXML private Text passwordText;
     @FXML private TextField passwordTextField;
+    @FXML private TextField websiteTextfield;
 
     @FXML private Button cancelButton;
-    @FXML private Button generatorButton;
+    @FXML private Button passwordGeneratorButton;
     @FXML private Button saveButton;
 
     @FXML private AnchorPane cardAccountPane;
@@ -79,22 +81,29 @@ public class AddAccountController {
     }
 
     @FXML
-    public void handleGeneratorButton(ActionEvent event){
+    public void handlePasswordGeneratorButton(ActionEvent event){
         try {
-            generatorButton.setDisable(true);
-
+            passwordGeneratorButton.setDisable(true);
             FXMLLoader loader = new FXMLLoader((getClass().getResource("/FXML/GeneratePasswordController.fxml")));
             Parent root = loader.load();
 
             Stage generatePasswordStage = new Stage();
             generatePasswordStage.setTitle("Password Generator");
-            //generatePasswordStage.initModality(Modality.APPLICATION_MODAL);
-            //generatePasswordStage.initOwner(generatorButton.getScene().getWindow());
+            generatePasswordStage.setAlwaysOnTop(true);
+
+            Stage addAccountWindow = (Stage) saveButton.getScene().getWindow();
+
+            addAccountWindow.setOnCloseRequest(e ->{
+                generatePasswordStage.close();
+            });
+
             generatePasswordStage.setScene(new Scene(root));
             generatePasswordStage.setResizable(false);
-            generatePasswordStage.showAndWait();
+            generatePasswordStage.show();
 
-            generatorButton.setDisable(false);
+            generatePasswordStage.setOnHidden(e -> {
+                passwordGeneratorButton.setDisable(false);
+            });
 
         }catch (Exception exception){
             exception.printStackTrace();
@@ -122,7 +131,7 @@ public class AddAccountController {
                 }else {
                     showAlert(Alert.AlertType.WARNING,"Error","Account already exists.");
                 }
-                generatorButton.getScene().getWindow().hide();
+                passwordGeneratorButton.getScene().getWindow().hide();
             }else{
                 showAlert(Alert.AlertType.WARNING,"Error","Please enter card name before saving.");
             }
@@ -133,6 +142,7 @@ public class AddAccountController {
                 LoginAccount newAccount=new LoginAccount.Builder(accountNameTextField.getText())
                         .username(usernameTextField.getText())
                         .password(passwordTextField.getText())
+                        .website(websiteTextfield.getText())
                         .notes(loginNoteArea.getText())
                         .build();
                 boolean accountAdded = accountManager.addAccount(newAccount);
@@ -143,7 +153,7 @@ public class AddAccountController {
                     showAlert(Alert.AlertType.WARNING,"Error","Account already exists.");
 
                 }
-                generatorButton.getScene().getWindow().hide();
+                passwordGeneratorButton.getScene().getWindow().hide();
             }else {
                 showAlert(Alert.AlertType.WARNING, "Error", "Please enter account name before saving.");
             }
@@ -161,7 +171,7 @@ public class AddAccountController {
                 }else {
                     showAlert(Alert.AlertType.WARNING,"Error","Account already exists.");
                 }
-                generatorButton.getScene().getWindow().hide();
+                passwordGeneratorButton.getScene().getWindow().hide();
             } else {
                 showAlert(Alert.AlertType.WARNING, "Error", "Please enter note name before saving.");
             }
@@ -170,7 +180,7 @@ public class AddAccountController {
 
     @FXML
     public void handleCancelButton(ActionEvent event){
-        generatorButton.getScene().getWindow().hide();
+        passwordGeneratorButton.getScene().getWindow().hide();
     }
 
     @FXML
@@ -179,21 +189,21 @@ public class AddAccountController {
         String choice=accountTypeChoiceBox.getValue();
 
         if(choice.equalsIgnoreCase("card")){
-            generatorButton.setVisible(false);
+            passwordGeneratorButton.setVisible(false);
             loginAccountPane.setVisible(false);
             noteAccountPane.setVisible(false);
             cardAccountPane.setVisible(true);
         }
 
         if(choice.equalsIgnoreCase("login")){
-            generatorButton.setVisible(true);
+            passwordGeneratorButton.setVisible(true);
             loginAccountPane.setVisible(true);
             noteAccountPane.setVisible(false);
             cardAccountPane.setVisible(false);
         }
 
         if(choice.equalsIgnoreCase("note")){
-            generatorButton.setVisible(false);
+            passwordGeneratorButton.setVisible(false);
             loginAccountPane.setVisible(false);
             noteAccountPane.setVisible(true);
             cardAccountPane.setVisible(false);

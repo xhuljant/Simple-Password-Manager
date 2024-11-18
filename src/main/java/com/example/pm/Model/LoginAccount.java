@@ -13,12 +13,14 @@ public class LoginAccount extends Account implements Comparable<Account>, Serial
     private String username;
     private String password;
     private String notes;
+    private String website;
 
     private LoginAccount(Builder builder) {
         super(builder.accountName, 0);
         this.username = builder.username;
         this.password = builder.password;
         this.notes = builder.notes;
+        this.website = builder.website;;
     }
 
     public static class Builder {
@@ -26,6 +28,7 @@ public class LoginAccount extends Account implements Comparable<Account>, Serial
         private String username = "";
         private String password = "";
         private String notes = "";
+        public String website = "";
 
         public Builder(String accountName) {
             this.accountName = accountName;
@@ -43,6 +46,11 @@ public class LoginAccount extends Account implements Comparable<Account>, Serial
 
         public Builder notes(String notes) {
             this.notes = notes;
+            return this;
+        }
+
+        public Builder website(String website) {
+            this.website = website;
             return this;
         }
 
@@ -72,6 +80,10 @@ public class LoginAccount extends Account implements Comparable<Account>, Serial
             return "";
     }
 
+    public String getWebsite(){
+        return this.website;
+    }
+
     @Override
     public String getAccountName() {return super.getAccountName();}
 
@@ -83,12 +95,14 @@ public class LoginAccount extends Account implements Comparable<Account>, Serial
     public void setPassword(String password) {this.password = password;}
     public void setUsername(String username) {this.username = username;}
     public void setNotes(String notes) {this.notes = notes;}
+    public void setWebsite(String website){this.website=website;}
 
     @Override
     public String toString() {
         return getAccountName()+"\n"+
                 getUsername()+"\n"+
                 getPassword()+"\n"+
+                getWebsite()+"\n"+
                 getNotes()+"\n";
     }
 
@@ -111,6 +125,7 @@ public class LoginAccount extends Account implements Comparable<Account>, Serial
                 .thenComparing(LoginAccount::getUsername,String.CASE_INSENSITIVE_ORDER)
                 .thenComparing(LoginAccount::getPassword)
                 .thenComparing(LoginAccount::getNotes,String.CASE_INSENSITIVE_ORDER)
+                .thenComparing(LoginAccount::getWebsite,String.CASE_INSENSITIVE_ORDER)
                 .compare(this,otherAccount);
     }
 }

@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,9 +40,10 @@ public class ChangeUsernameController {
         if(verifiedAccess){
             try{
                 EncryptionService encryptionService =  new EncryptionService();
+                Path dataDir = AccountManager.getAppDataDirectory().resolve("data");
 
-                Path originalFile = Path.of(DATA_DIRECTORY+encryptionService.generateFileName(usernameField.getText()));
-                Path newFile = Path.of(DATA_DIRECTORY+encryptionService.generateFileName(newUsernameField.getText()));
+                Path originalFile = dataDir.resolve(encryptionService.generateFileName(usernameField.getText()));
+                Path newFile = dataDir.resolve(encryptionService.generateFileName(newUsernameField.getText()));
 
                 if(!Files.exists(originalFile)){
                     showAlert(Alert.AlertType.ERROR,"Error","No file found matching username entered.");
@@ -53,7 +55,7 @@ public class ChangeUsernameController {
                     return;
                 }
 
-                Files.move(originalFile,newFile);
+                Files.move(originalFile,newFile, StandardCopyOption.REPLACE_EXISTING);
 
                 Alert passwordChangedAlert = new Alert(Alert.AlertType.INFORMATION);
                 passwordChangedAlert.setTitle("Username Changed");
