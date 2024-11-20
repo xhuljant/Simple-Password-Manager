@@ -29,8 +29,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.*;
 import java.util.List;
-import java.util.Optional;
 
 public class MainWindowController {
 
@@ -47,6 +47,7 @@ public class MainWindowController {
     @FXML private Button copyUserNameButton;
     @FXML private Button exportButton;
     @FXML private Text currentUserTextField;
+    @FXML private ChoiceBox folderChoiceBox;
 
 
     @FXML public Text itemInformationText;
@@ -56,10 +57,13 @@ public class MainWindowController {
     @FXML private Button noteAccountsButton;
     @FXML private Button passwordGeneratorButton;
     @FXML private TextField searchTextField;
+    @FXML private Button removeFolderButton;
+    @FXML private Button addFolderButton;
 
     @FXML private Button saveAccountButton;
     @FXML private Button editAccountButton;
     @FXML private Button deleteAccountButton;
+    @FXML private Button folderButton;
     @FXML private Button cancelEditButton;
     @FXML private Button addAccountButton;
     @FXML private Button logoutButton;
@@ -98,6 +102,7 @@ public class MainWindowController {
         setupListViews();
         setupSearchFunctionality();
         setupWebsiteFields();
+
     }
 
     private void setupListViews(){
@@ -140,6 +145,24 @@ public class MainWindowController {
                 showAccountDetails(newSelection);
             }
         });
+    }
+
+    private void setupFolderChoiceBox(){
+        folderChoiceBox.getItems().clear();
+
+        List<String> folderNames = new ArrayList<>();
+
+        for(Map.Entry<String,Folder> entry : accountManager.getFolderMap().entrySet()){
+            folderNames.add(entry.getKey());
+        }
+
+        Collections.sort(folderNames,String.CASE_INSENSITIVE_ORDER);
+
+        for(String folderName : folderNames){
+            folderChoiceBox.getItems().add(folderName);
+        }
+
+        System.out.println(accountManager.getFolderMap().keySet());
     }
 
     private void setupSearchFunctionality() {
@@ -199,6 +222,7 @@ public class MainWindowController {
         loadCardAccountsList();
         loadNoteAccountsList();
         showAllAccounts();
+        setupFolderChoiceBox();
         currentUserTextField.setText(masterUsername);
     }
 
@@ -395,6 +419,7 @@ public class MainWindowController {
         editAccountButton.setDisable(false);
         editAccountButton.setVisible(false);
         cancelEditButton.setVisible(false);
+        folderButton.setVisible(false);
 
         accountNameTextField.setEditable(false);
         usernameTextField.setEditable(false);
@@ -410,6 +435,8 @@ public class MainWindowController {
 
         noteNameTextField.setEditable(false);
         noteContentTextArea.setEditable(false);
+
+        folderChoiceBox.setValue("");
 
         System.out.println("Reset all buttons and fields.");
     }
@@ -483,6 +510,7 @@ public class MainWindowController {
         editAccountButton.setDisable(true);
         saveAccountButton.setVisible(true);
         cancelEditButton.setVisible(true);
+        folderButton.setVisible(true);
     }
 
     @FXML
@@ -706,6 +734,85 @@ public class MainWindowController {
             exception.printStackTrace();
             showAlert(Alert.AlertType.WARNING, "Error", "Unable to open settings.");
         }
+    }
+
+    @FXML
+    public void handleAddToFolderButton() throws Exception {
+        String folderName = folderChoiceBox.getValue().toString();
+        Account account = getSelectedAccount();
+
+        if(account != null && folderName != null && !folderName.trim().isEmpty()){
+            if(accountManager.addAccountToFolder(account,folderName)){
+                accountManager.saveToFile(masterUsername,masterPassword);
+                showAlert(Alert.AlertType.INFORMATION,"Done","Account added to folder.");
+            }else{
+                showAlert(Alert.AlertType.ERROR,"Failed","Account not added to folder.");
+            }
+        }else {
+            showAlert(Alert.AlertType.ERROR,"Failed","Account not added to folder. Make sure folder is selected and account is sleceted.");
+        }
+
+    }
+
+    @FXML
+    public void handleNewFolderButton(){
+        try{
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/CreateFolderController.fxml"));
+            Parent root = loader.load();
+
+            CreateFolderController createFolderController = loader.getController();
+
+            createFolderController.setFolderNameCallback(folderName ->{
+                accountManager.createFolder(folderName);
+
+                try {
+                    accountManager.saveToFile(masterUsername,masterPassword);
+                    accountManager = AccountManager.loadFromFile(masterUsername,masterPassword);
+                    setupFolderChoiceBox();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+
+            });
+
+            Stage createFolderStage = new Stage();
+            createFolderStage.setTitle("Create New Folder");
+            createFolderStage.setScene(new Scene(root));
+            createFolderStage.initModality(Modality.APPLICATION_MODAL);
+            createFolderStage.setResizable(false);
+            createFolderStage.showAndWait();
+
+        }catch (Exception e){
+            showAlert(Alert.AlertType.ERROR,"Error","Unable to open create a folder window.");
+            System.err.println(e.getMessage());
+        }
+    }
+
+    @FXML
+    public void handleRemoveFolderButton(){
+        String folderName = folderChoiceBox.getValue().toString();
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirm");
+        alert.setHeaderText("Confirm Folder Delete");
+        alert.setContentText("Are you sure you want to delete this folder? This cannot be undone.");
+
+        alert.showAndWait().ifPresent(response -> {
+            if(response==ButtonType.OK){
+                if(accountManager.deleteFolder(folderName)) {
+                    setupFolderChoiceBox();
+                    try {
+                        accountManager.saveToFile(masterUsername,masterPassword);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }else {
+                    showAlert(Alert.AlertType.INFORMATION,"Error","Unable to remove folder, make sure a folder is selected and try again.");
+                };
+            }else {
+                System.out.println("Folder not deleted.");
+            }
+        });
     }
 
     private void openWebsite(String url){

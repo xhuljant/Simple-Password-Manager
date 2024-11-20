@@ -9,7 +9,7 @@ public class NoteAccount extends Account implements Serializable {
     private String note;
 
     private NoteAccount(Builder builder){
-        super(builder.noteName,2);
+        super(builder.noteName, NOTE_ACCOUNT);
         this.note=builder.noteContent;
     }
 

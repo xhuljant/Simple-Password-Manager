@@ -25,8 +25,27 @@ public class AccountManager{
      */
 
     private Map<Integer,List<Account>> accountMap;
+    private Map<String,Folder> folderMap;
     private static final String APP_NAME = "Password Manager";
-    private static final String FILE_EXTENSION = ".db";
+
+    private static class DataWrapper implements Serializable {
+        private static final long serialVersionUID = 1L;
+        private final Map<Integer, List<Account>> accounts;
+        private final Map<String, Folder> folders;
+
+        public DataWrapper(Map<Integer, List<Account>> accounts, Map<String, Folder> folders) {
+            this.accounts = accounts;
+            this.folders = folders;
+        }
+
+        public Map<Integer, List<Account>> getAccounts() {
+            return accounts;
+        }
+
+        public Map<String, Folder> getFolders() {
+            return folders;
+        }
+    }
 
     /**
      * Constructor takes no parameters
@@ -34,7 +53,8 @@ public class AccountManager{
      * Can be expanded in the future if further account types are needed
      */
     public AccountManager(){
-        accountMap=new HashMap<>();
+        accountMap = new HashMap<>();
+        folderMap = new HashMap<>();
         for(int i=0;i<3;i++){ //Initializing new lists for each account type, currently only 3 account types, can be expanded in the future
             accountMap.put(i,new ArrayList<>());
         }
@@ -142,16 +162,17 @@ public class AccountManager{
     public void saveToFile(String username, String password) throws Exception {
         EncryptionService encryptionService = new EncryptionService();
 
+        DataWrapper wrapper = new DataWrapper(accountMap, folderMap);
+
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(bos);
-        oos.writeObject(accountMap);
+        oos.writeObject(wrapper);
         oos.flush();
         byte[] serializedData = bos.toByteArray();
 
         String encryptedData = encryptionService.encrypt(Base64.getEncoder().encodeToString(serializedData), password);
 
         String fileName = encryptionService.generateFileName(username);
-
         Path dataDir = getDataDirectory();
         Path filePath = dataDir.resolve(fileName);
         Files.write(filePath, encryptedData.getBytes(StandardCharsets.UTF_8));
@@ -166,7 +187,6 @@ public class AccountManager{
      * @return new Account Manager obj is returned
      * @throws Exception
      */
-    // New method to load encrypted accountMap from file
     public static AccountManager loadFromFile(String username, String password) throws Exception {
         if (verifyAccess(username, password)) {
             try {
@@ -180,11 +200,15 @@ public class AccountManager{
                 byte[] serializedData = Base64.getDecoder().decode(decryptedData);
                 ByteArrayInputStream bis = new ByteArrayInputStream(serializedData);
                 ObjectInputStream ois = new ObjectInputStream(bis);
-                Map<Integer, List<Account>> loadedMap = (Map<Integer, List<Account>>) ois.readObject();
+
+                DataWrapper wrapper = (DataWrapper) ois.readObject();
 
                 AccountManager manager = new AccountManager();
-                manager.accountMap = loadedMap;
+                manager.accountMap = wrapper.getAccounts();
+                manager.folderMap = wrapper.getFolders();
+
                 return manager;
+
             } catch (Exception e) {
                 System.out.println("Error:" + e.getMessage());
                 return null;
@@ -290,4 +314,65 @@ public class AccountManager{
         Files.createDirectories(appDataPath);
         return appDataPath;
     }
+
+    public boolean createFolder(String folderName){
+
+        if(folderName == null || folderName.isEmpty()){
+            return false;
+        }
+
+        folderName = folderName.trim();
+
+        if(folderMap.containsKey(folderName.toLowerCase())){
+            System.err.println("Folder already exists.");
+            return false;
+        }
+
+        folderMap.put(folderName.toLowerCase(), new Folder(folderName.toLowerCase()));
+        return true;
+    }
+
+    public boolean deleteFolder(String folderName){
+        return folderMap.remove(folderName.toLowerCase()) != null;
+    }
+
+    public boolean addAccountToFolder(Account account, String folderName){
+        Folder folder = folderMap.get(folderName.toLowerCase());
+
+        if(folder == null){
+            System.err.println("Folder returns null value");
+            return false;
+        }
+
+        return folder.addAccount(account);
+    }
+
+    public boolean removeAccountFromFolder(Account account, String folderName){
+        Folder folder = folderMap.get(folderName.toLowerCase());
+
+        if(folder == null){
+            System.err.println("Folder returns null value");
+            return false;
+        }
+
+        return folder.removeAccount(account);
+    }
+
+    public List<Account> getAccountsInFolder(String folderName){
+        List<Account> allAccountsInFolder = new ArrayList<>();
+        Folder folder = folderMap.get(folderName.toLowerCase());
+
+        if(folder == null){
+            return allAccountsInFolder;
+        }
+
+        allAccountsInFolder=folder.getAccounts();
+
+        return allAccountsInFolder;
+    }
+
+    public Map<String, Folder> getFolderMap(){
+        return this.folderMap;
+    }
+
 }

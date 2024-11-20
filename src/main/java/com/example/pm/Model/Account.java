@@ -7,15 +7,15 @@ import java.io.Serializable;
  * Implements comparable for sorting and searching and serializable for writing obj to file
  */
 public class Account implements Comparable<Account>, Serializable{
-    /**
-     * Accounts in accountType are indexed as follows
-     * 0=Login Account
-     * 1=Card Account
-     * 2=Note Account
-     */
     private static final long serialVersionUID = 1L;
+
+    public static final int LOGIN_ACCOUNT=0;
+    public static final int CARD_ACCOUNT=1;
+    public static final int NOTE_ACCOUNT=2;
+
     private String accountName;
-    private int accountType;
+    private final int accountType;
+    private int accountCategory;
 
     /**
      * @param accountName passed in from subclass
@@ -27,12 +27,16 @@ public class Account implements Comparable<Account>, Serializable{
     }
 
     public int getAccountType() {return accountType;}
+
     public String getAccountName() {
         if(this.accountName!=null)
             return accountName;
         else
             return "";
     }
+
+    public int getAccountCategory(){return accountCategory;}
+
     public void setAccountName(String accountName) {this.accountName = accountName;}
     @Override
     public String toString() {return this.accountName;}

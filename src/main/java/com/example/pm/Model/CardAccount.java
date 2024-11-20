@@ -22,7 +22,7 @@ public class CardAccount extends Account implements Comparable<Account>, Seriali
      * @param builder
      */
     private CardAccount(Builder builder){
-        super(builder.accountName,1);
+        super(builder.accountName,CARD_ACCOUNT);
         this.cardNumber=builder.cardNumber;
         this.cardSecCode=builder.cardSecCode;
         this.cardExpDate=builder.cardExpDate;

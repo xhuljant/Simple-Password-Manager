@@ -16,7 +16,7 @@ public class LoginAccount extends Account implements Comparable<Account>, Serial
     private String website;
 
     private LoginAccount(Builder builder) {
-        super(builder.accountName, 0);
+        super(builder.accountName, LOGIN_ACCOUNT);
         this.username = builder.username;
         this.password = builder.password;
         this.notes = builder.notes;

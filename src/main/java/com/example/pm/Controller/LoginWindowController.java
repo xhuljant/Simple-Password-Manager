@@ -53,7 +53,7 @@ public class LoginWindowController {
             mainStage.setTitle("Password Manager");
             mainStage.setScene(new Scene(root));
             mainStage.setMinHeight(650);
-            mainStage.setMinWidth(758);
+            mainStage.setMinWidth(794);
 
             currentStage.close();
             mainStage.show();
