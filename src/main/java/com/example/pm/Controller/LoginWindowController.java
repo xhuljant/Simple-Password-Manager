@@ -29,10 +29,8 @@ public class LoginWindowController {
     @FXML private Button createAccountButton;
     @FXML public Button importButton;
 
-
     @FXML
     private void initialize() {
-        // This method is called automatically after the FXML file is loaded
         System.out.println("LoginWindowController initialized");
     }
 
@@ -53,7 +51,7 @@ public class LoginWindowController {
             mainStage.setTitle("Password Manager");
             mainStage.setScene(new Scene(root));
             mainStage.setMinHeight(650);
-            mainStage.setMinWidth(794);
+            mainStage.setMinWidth(784);
 
             currentStage.close();
             mainStage.show();
@@ -74,8 +72,6 @@ public class LoginWindowController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/CreateAccountController.fxml"));
             Parent root = loader.load();
 
-            CreateAccountController createAccountController = loader.getController();
-
             Stage createAccountStage = new Stage();
             createAccountStage.setTitle("Create New Account");
             createAccountStage.initModality(Modality.APPLICATION_MODAL);
@@ -94,8 +90,6 @@ public class LoginWindowController {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/ImportWindowController.fxml"));
         Parent root = loader.load();
 
-        //ImportWindowController importAccountController = loader.getController();
-
         Stage importAccountStage = new Stage();
         importAccountStage.setTitle("Import Account");
         importAccountStage.initModality(Modality.APPLICATION_MODAL);
@@ -109,11 +103,6 @@ public class LoginWindowController {
     @FXML
     private void handleLoginButton(ActionEvent event) throws Exception {
 
-
-/*
-        String username = "xhuljan";
-        String password = "qwertyui1!";
- */
         String username = userNameField.getText();
         String password = passwordField.getText();
 

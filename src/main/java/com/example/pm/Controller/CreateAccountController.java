@@ -92,7 +92,6 @@ public class CreateAccountController {
     public void handleGeneratePasswordButton(ActionEvent e) throws IOException {
         try {
 
-
             FXMLLoader loader = new FXMLLoader((getClass().getResource("/FXML/GeneratePasswordController.fxml")));
             Parent root = loader.load();
 

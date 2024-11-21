@@ -82,15 +82,12 @@ public class DeleteAccountController {
                         }
                     });
                 }
-
             }catch (Exception e){
                 showAlert(Alert.AlertType.ERROR,"Error","Unable to delete file.");
                 System.err.println(e.getMessage());
-
             }
         }
     }
-
 
     private void showAlert(Alert.AlertType alertType, String title, String content) {
         Alert alert = new Alert(alertType);

@@ -58,6 +58,7 @@ Text{
 
 .list-view .list-cell:selected {
     -fx-background-color: #6e7880;
+    -fx-text-fill: white;
 }
 
 .list-view .list-cell:hover {

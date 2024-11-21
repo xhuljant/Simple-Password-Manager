@@ -2,7 +2,6 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
@@ -17,7 +16,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane minHeight="622.0" minWidth="794.0" prefHeight="622.0" prefWidth="794.0" stylesheets="@../CSS/styles.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pm.Controller.MainWindowController">
+<AnchorPane minHeight="622.0" minWidth="784.0" prefHeight="622.0" prefWidth="784.0" stylesheets="@../CSS/styles.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pm.Controller.MainWindowController">
     <children>
       <BorderPane minHeight="622.0" minWidth="900" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <center>
@@ -55,40 +54,6 @@
                                               <Insets bottom="50.0" />
                                           </VBox.margin>
                                       </Button>
-                              <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
-                                 <children>
-                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Folders" textAlignment="CENTER" wrappingWidth="60.772132873535156">
-                                       <font>
-                                          <Font size="17.0" />
-                                       </font></Text>
-                                    <Button fx:id="addFolderButton" mnemonicParsing="false" onAction="#handleNewFolderButton" prefHeight="35.0" prefWidth="40.0" style="-fx-background-color: transparent ;-fx-cursor: hand" text="+">
-                                       <HBox.margin>
-                                          <Insets />
-                                       </HBox.margin>
-                                       <tooltip>
-                                          <Tooltip text="Create Folder" />
-                                       </tooltip>
-                                    </Button>
-                                    <Button fx:id="removeFolderButton" mnemonicParsing="false" onAction="#handleRemoveFolderButton" prefWidth="40.0" style="-fx-background-color: transparent; -fx-cursor: hand" text="-">
-                                       <tooltip>
-                                          <Tooltip text="Remove Folder" />
-                                       </tooltip></Button>
-                                 </children>
-                                 <opaqueInsets>
-                                    <Insets top="5.0" />
-                                 </opaqueInsets>
-                                 <VBox.margin>
-                                    <Insets bottom="5.0" />
-                                 </VBox.margin>
-                              </HBox>
-                              <ChoiceBox fx:id="folderChoiceBox" prefHeight="35.0" prefWidth="127.0">
-                                 <opaqueInsets>
-                                    <Insets bottom="5.0" />
-                                 </opaqueInsets>
-                                 <VBox.margin>
-                                    <Insets bottom="5.0" />
-                                 </VBox.margin>
-                              </ChoiceBox>
                            </children>
                            <VBox.margin>
                               <Insets bottom="30.0" left="1.0" />
@@ -384,7 +349,7 @@
                                     <Insets right="10.0" />
                                  </HBox.margin>
                               </Button>
-                              <Button fx:id="saveAccountButton" mnemonicParsing="false" onAction="#handleSaveButton" prefHeight="26.0" prefWidth="54.0">
+                              <Button fx:id="saveAccountButton" mnemonicParsing="false" onAction="#handleSaveButton" prefHeight="34.0" prefWidth="92.0">
                                  <graphic>
                                     <ImageView fitHeight="17.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
@@ -393,7 +358,7 @@
                                     </ImageView>
                                  </graphic>
                                  <HBox.margin>
-                                    <Insets right="10.0" />
+                                    <Insets right="40.0" />
                                  </HBox.margin>
                                  <tooltip>
                                     <Tooltip text="Save" />
@@ -412,21 +377,6 @@
                                  </HBox.margin>
                                  <tooltip>
                                     <Tooltip text="Cancel" />
-                                 </tooltip>
-                              </Button>
-                              <Button fx:id="folderButton" mnemonicParsing="false" onAction="#handleCancelButton" prefHeight="26.0" prefWidth="54.0">
-                                 <HBox.margin>
-                                    <Insets right="10.0" />
-                                 </HBox.margin>
-                                 <graphic>
-                                    <ImageView fitHeight="27.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../Media/folder-open.256x208.png" />
-                                       </image>
-                                    </ImageView>
-                                 </graphic>
-                                 <tooltip>
-                                    <Tooltip text="Add to folder" />
                                  </tooltip>
                               </Button>
                               <Button fx:id="deleteAccountButton" mnemonicParsing="false" onAction="#handleDeleteButton" prefHeight="26.0" prefWidth="54.0">

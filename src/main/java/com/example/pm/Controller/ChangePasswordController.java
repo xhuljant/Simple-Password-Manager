@@ -25,8 +25,7 @@ public class ChangePasswordController {
 
     private AccountManager accountManager;
     private static final Pattern PASSWORD_PATTERN = Pattern.compile("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-=])[A-Za-z\\d!@#$%^&*()_+\\-=]{8,}$");
-
-
+    
     @FXML
     public void initialize(){
         accountManager=new AccountManager();
@@ -95,7 +94,6 @@ public class ChangePasswordController {
                    }
                });
            }
-
            System.out.println("Password changed.");
        }catch (Exception e){
            System.out.println("Unable to change password.");

@@ -67,8 +67,6 @@ public class AddAccountController {
     @FXML public Text noteNameText;
     @FXML public TextField noteNameTextField;
 
-
-
     @FXML
     public void initialize(){
         accountTypeChoiceBox.setValue("Login");

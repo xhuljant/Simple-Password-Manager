@@ -91,7 +91,6 @@ public class SettingsWindowController {
     @FXML
     public void handleExportButton() throws IOException {
         try {
-
             EncryptionService encryptionService = new EncryptionService();
 
             Path dataDir = AccountManager.getAppDataDirectory().resolve("data");
@@ -136,7 +135,6 @@ public class SettingsWindowController {
             System.err.println("Error exporting file:"+e.getMessage());
         }
     }
-
 
     public void setUsername(String username){
         this.username=username;
