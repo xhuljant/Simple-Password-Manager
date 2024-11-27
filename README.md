@@ -31,7 +31,8 @@ A Java-based password management application with encryption that allows users t
 
 ## Installation
 
-Instructions on how to get a copy of the project and running on your local machine.
+[Instructions on how to get a copy of the project and running on your local machine.
+](https://github.com/xhuljant/Simple-Password-Manager/releases/tag/v1.0.0-mac)
 
 ### Prerequisites
 
