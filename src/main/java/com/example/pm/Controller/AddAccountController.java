@@ -206,7 +206,6 @@ public class AddAccountController {
             noteAccountPane.setVisible(true);
             cardAccountPane.setVisible(false);
         }
-
     }
 
     private void showAlert(Alert.AlertType alertType, String title, String content) {

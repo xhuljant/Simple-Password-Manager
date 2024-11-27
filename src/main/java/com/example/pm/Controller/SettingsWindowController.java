@@ -32,6 +32,7 @@ public class SettingsWindowController {
 
     private String username;
 
+    @FXML
     public void handleChangeMasterPasswordButton(){
         try {
             FXMLLoader loader = new FXMLLoader((getClass().getResource("/FXML/ChangePasswordController.fxml")));
@@ -88,6 +89,10 @@ public class SettingsWindowController {
         }
     }
 
+    /**
+     * Allows user to export data file to a selected directory
+     * Allows users data to be used in multiple machines
+     */
     @FXML
     public void handleExportButton() throws IOException {
         try {

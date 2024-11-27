@@ -32,12 +32,19 @@ import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.List;
 
+/**
+ * Main Controller that manages Password Manager UI
+ * Handles adding and removing accounts as well as editing current accounts
+ * Saves and loads data from file once user verifies master password
+ */
+
 public class MainWindowController {
+    //Masterusername and password are passed in to save and encrypt data with users credentials
+    private String masterUsername;
+    private String masterPassword;
 
     private AccountManager accountManager;
     private Account currentAccount;
-    private String masterUsername;
-    private String masterPassword;
     private boolean editSelected;
 
     @FXML private Button copyCardNumberButton;
@@ -47,48 +54,49 @@ public class MainWindowController {
     @FXML private Button copyUserNameButton;
     @FXML private Button exportButton;
     @FXML private Text currentUserTextField;
+    @FXML private Button logoutButton;
+    @FXML private Button passwordGeneratorButton;
 
-
-    @FXML public Text itemInformationText;
     @FXML private Button allAccountsButton;
     @FXML private Button loginAccountsButton;
     @FXML private Button cardAccountsButton;
     @FXML private Button noteAccountsButton;
-    @FXML private Button passwordGeneratorButton;
     @FXML private TextField searchTextField;
 
-
+    //Buttons to allow editing of accounts
     @FXML private Button saveAccountButton;
     @FXML private Button editAccountButton;
     @FXML private Button deleteAccountButton;
     @FXML private Button cancelEditButton;
     @FXML private Button addAccountButton;
-    @FXML private Button logoutButton;
 
+    //Listviews to show and allow selection of account
     @FXML private ListView<Account> allAccountsListView;
     @FXML private ListView<Account> loginAccountsListView;
     @FXML private ListView<Account> cardAccountsListView;
     @FXML private ListView<Account> noteAccountsListView;
 
+    //Panes that show account information depending on account type
+    @FXML public Text itemInformationText;
     @FXML private AnchorPane loginDetailsPane;
     @FXML private AnchorPane cardDetailsPane;
     @FXML private AnchorPane noteDetailsPane;
 
-    //login accounts
+    //Lgin accounts
     @FXML private TextField accountNameTextField;
     @FXML private TextField usernameTextField;
     @FXML private TextField passwordTextField;
     @FXML private TextField websiteTextfield;
     @FXML private TextArea notesTextField;
 
-    //card accounts
+    //Card account
     @FXML private TextField cardNameTextField;
     @FXML private TextField cardNumberTextField;
     @FXML private TextField expDateTextField;
     @FXML private TextField secCodeTextField;
     @FXML private TextField cardHolderNameTextField;
 
-    //note accounts
+    //Note accounts
     @FXML private TextField noteNameTextField;
     @FXML private TextArea noteContentTextArea;
 
@@ -100,6 +108,11 @@ public class MainWindowController {
         setupWebsiteFields();
     }
 
+    /**
+     * Setup listeners for listviews of different account types
+     * If one listener registers input all fields are reset to default status
+     * Any edits that have not been saved will be disregarded
+     */
     private void setupListViews(){
         allAccountsListView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (editSelected) {
@@ -264,7 +277,7 @@ public class MainWindowController {
         }
     }
 
-    //Functions to only show the list user would like to see
+    //Show selected account type list and hide others
     public void showAllAccounts() {
         clearAllSelections();
         hideItemInformation();
@@ -319,8 +332,7 @@ public class MainWindowController {
         hideItemInformation();
     }
 
-    //Functions to show the fields on the right side of listview that match the object type
-    //For example, if a LoginAccount is selected then only fields that account type should be shown
+    //Shows the fields on the right side of listview that match the object type selected
     public void showLoginDetails(LoginAccount account) {
         loginDetailsPane.setVisible(true);
         cardDetailsPane.setVisible(false);
@@ -361,7 +373,6 @@ public class MainWindowController {
 
         editAccountButton.setVisible(true);
         itemInformationText.setVisible(true);
-
     }
 
     private void loadAllLists() {
@@ -414,44 +425,36 @@ public class MainWindowController {
         System.out.println("Reset all buttons and fields.");
     }
 
+    /**
+     * Opens website selected on users default browser
+     * Formats URL to ensure website loads as expected
+     * @param url
+     */
+    private void openWebsite(String url){
+        if(url == null || url.trim().isEmpty()){
+            return;
+        }
+
+        url=url.replaceAll("^(https?://)", "");
+        url=url.replaceAll("/$", "");
+        url=url.replaceAll("^www\\.", "");
+        url="https://"+url;
+
+        try{
+            Desktop.isDesktopSupported();
+            Desktop desktop = Desktop.getDesktop();
+            desktop.browse(new URI(url));
+        }catch (IOException | URISyntaxException e) {
+            showAlert(Alert.AlertType.WARNING,
+                    "Error",
+                    "Could not open website: " + e.getMessage());
+        }
+    }
+
     @FXML public void handleAllAccountsButton(ActionEvent event) {showAllAccounts();}
     @FXML public void handleLoginAccountsButton(ActionEvent event) {showLoginAccounts();}
     @FXML public void handleCardAccountsButton(ActionEvent event) {showCardAccounts();}
     @FXML public void handleNoteAccountsButton(ActionEvent event) {showNoteAccounts();}
-
-    @FXML
-    public void handleExportButton(){
-        EncryptionService encryptionService=new EncryptionService();
-        File sourceFile= new File("Data/"+encryptionService.generateFileName(masterUsername));
-
-        DirectoryChooser directoryChooser = new DirectoryChooser();
-        directoryChooser.setTitle("Select Folder");
-        Stage currentStage = (Stage) exportButton.getScene().getWindow();
-        File selectedDirectory = directoryChooser.showDialog(currentStage);
-
-        if(selectedDirectory!=null){
-
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Confirm Export");
-            alert.setHeaderText("Export File");
-            alert.setContentText("Export file to "+selectedDirectory.getAbsolutePath()+" ?");
-
-            alert.showAndWait().ifPresent(response -> {
-                if(response==ButtonType.OK){
-                    try{
-                        File copiedFile=new File(selectedDirectory,sourceFile.getName());
-                        Files.copy(sourceFile.toPath(),copiedFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                        System.out.println("File Exported Successfully.");
-                    }catch (Exception e){
-                        System.out.println("File Exported Successfully.");
-                        e.printStackTrace();
-                    }
-                }else {
-                    System.out.println("File not exported.");
-                }
-            });
-        }
-    }
 
     @FXML
     public void handleEditAccountButton(ActionEvent event) {
@@ -485,6 +488,14 @@ public class MainWindowController {
         cancelEditButton.setVisible(true);
     }
 
+    /**
+     * Saves any changed account data to file
+     * Handles errors such as empty fields
+     * Account with new info is created and added to Map while original account is removed
+     * Account type is decided from the current Pane type that is visible
+     * @param event
+     * @throws Exception
+     */
     @FXML
     public void handleSaveButton(ActionEvent event) throws Exception {
 
@@ -667,21 +678,6 @@ public class MainWindowController {
     }
 
     @FXML
-    public void handleLogoutButton() throws Exception {
-        addAccountButton.getScene().getWindow().hide();
-
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/FXML/LoginWindowController.fxml"));
-        Scene scene = new Scene(fxmlLoader.load());
-        Stage loginStage = new Stage();
-        loginStage.setTitle("Password Manager");
-        loginStage.setScene(scene);
-        loginStage.setResizable(false);
-        loginStage.show();
-
-        System.out.println("Logged out.");
-    }
-
-    @FXML
     public void handleSettingsButton(){
         try {
             FXMLLoader loader = new FXMLLoader((getClass().getResource("/FXML/SettingsWindowController.fxml")));
@@ -705,25 +701,19 @@ public class MainWindowController {
         }
     }
 
-    private void openWebsite(String url){
-        if(url == null || url.trim().isEmpty()){
-            return;
-        }
+    @FXML
+    public void handleLogoutButton() throws Exception {
+        addAccountButton.getScene().getWindow().hide();
 
-        url=url.replaceAll("^(https?://)", "");
-        url=url.replaceAll("/$", "");
-        url=url.replaceAll("^www\\.", "");
-        url="https://"+url;
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/FXML/LoginWindowController.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        Stage loginStage = new Stage();
+        loginStage.setTitle("Password Manager");
+        loginStage.setScene(scene);
+        loginStage.setResizable(false);
+        loginStage.show();
 
-        try{
-            Desktop.isDesktopSupported();
-            Desktop desktop = Desktop.getDesktop();
-            desktop.browse(new URI(url));
-        }catch (IOException | URISyntaxException e) {
-            showAlert(Alert.AlertType.WARNING,
-                    "Error",
-                    "Could not open website: " + e.getMessage());
-        }
+        System.out.println("Logged out.");
     }
 
     @FXML public void handleCopyUsernameButton(){
@@ -764,5 +754,4 @@ public class MainWindowController {
         alert.setContentText(content);
         alert.showAndWait();
     }
-
 }
