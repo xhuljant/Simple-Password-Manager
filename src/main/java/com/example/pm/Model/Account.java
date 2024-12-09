@@ -15,7 +15,6 @@ public class Account implements Comparable<Account>, Serializable{
 
     private String accountName;
     private final int accountType;
-    private int accountCategory;
 
     /**
      * @param accountName passed in from subclass
@@ -35,7 +34,6 @@ public class Account implements Comparable<Account>, Serializable{
             return "";
     }
 
-    public int getAccountCategory(){return accountCategory;}
 
     public void setAccountName(String accountName) {this.accountName = accountName;}
     @Override
