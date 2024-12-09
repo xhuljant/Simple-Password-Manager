@@ -31,15 +31,29 @@ A Java-based password management application with encryption that allows users t
 
 ## Installation
 
-Instructions on how to get a copy of the project and running on your local machine.
-
 ### Prerequisites
 
 - Java 11 or higher
 - JavaFX runtime
 
 
-Explain the process step by step.
+For Mac:
+
+1 . [Download Password_Manager.zip
+](https://github.com/xhuljant/Simple-Password-Manager/releases/tag/v1.0.0-mac)
+
+2 . Extract Password_Manager.app Into Applications folder or other location
+
+3 . On first launch you may see "“Password_Manager” is damaged and can’t be opened. You should move it to the Trash." Select 'Cancel' and follow steps below:
+    
+    
+    1 . Open System Settings
+    2 . Select Privacy & Security 
+    3 . Select "Open Anyway" where it shows "Password_Manager" was blocked to protect your mac"
+    4 . Select "Open"
+    5 . Verify Login Password
+
+4 . App will now launch normally going forward
 
 
 ## Usage
